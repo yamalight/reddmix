@@ -1,29 +1,23 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import { redditAuth } from '~/cookies';
+import { codeToToken } from '~/reddit/auth.js';
 
 // https://remix.run/api/conventions#meta
 export let meta: MetaFunction = () => {
   return {
-    title: 'Remix Starter',
-    description: 'Welcome to remix!',
+    title: 'Reddmix Auth Redirect',
+    description: 'Redirects to the auth page',
   };
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   let url = new URL(request.url);
   let code = url.searchParams.get('code');
+  if (!code) {
+    return { error: 'No code provided' };
+  }
 
-  const result = await fetch('https://www.reddit.com/api/v1/access_token', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        process.env.REDDIT_CLIENT_ID + ':' + process.env.REDDIT_CLIENT_SECRET
-      ).toString('base64')}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REDDIT_REDIRECT_URI}`,
-  }).then((res) => res.json());
-
+  const result = await codeToToken(code);
   const options = result.access_token
     ? {
         headers: {

@@ -1,35 +1,46 @@
-import { LoaderFunction, MetaFunction, useLoaderData } from 'remix';
-import { redditAuth } from '~/cookies';
-import { getFrontpage } from '~/reddit.js';
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
+import { redditAuth } from '~/cookies.js';
+import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
+import { getFrontpage } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
-  const loginUrl = `https://www.reddit.com/api/v1/authorize?client_id=${
-    process.env.REDDIT_CLIENT_ID
-  }&response_type=code&state=${Date.now()}&redirect_uri=${
-    process.env.REDDIT_REDIRECT_URI
-  }&duration=permanent&scope=read`;
+  let authData = await getAuthData(request);
+  if (authData?.access_token) {
+    try {
+      const posts = await getFrontpage(authData);
+      return { posts };
+    } catch (error) {
+      if (error.status !== 401) {
+        return { error };
+      }
 
-  let cookieHeader = request.headers.get('Cookie');
-  let authData = await redditAuth.parse(cookieHeader);
-
-  if (authData.access_token) {
-    const posts = await getFrontpage(authData);
-    return { posts };
+      // If the access token is invalid, we need to generate a new one.
+      authData = await refreshToken(authData);
+      const posts = await getFrontpage(authData);
+      return json(
+        { posts },
+        {
+          headers: {
+            'Set-Cookie': await redditAuth.serialize(authData),
+          },
+        }
+      );
+    }
   }
 
-  // https://remix.run/api/remix#json
-  return { loginUrl, authData };
+  const loginUrl = generateLoginUrl();
+  return { loginUrl };
 };
 
 // https://remix.run/api/conventions#meta
 export let meta: MetaFunction = () => {
   return {
-    title: 'Remix Starter',
-    description: 'Welcome to remix!',
+    title: 'Reddmix',
+    description: 'Welcome to Reddmix!',
   };
 };
 

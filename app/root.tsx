@@ -1,6 +1,5 @@
 import type { LinksFunction } from 'remix';
 import {
-  Link,
   Links,
   LiveReload,
   Meta,
@@ -111,25 +110,5 @@ function Document({
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="container">
-      <header className="remix-app__header">
-        <div className="container remix-app__header-content">
-          <Link to="/" title="Remix" className="remix-app__header-home-link">
-            Redditmix
-          </Link>
-          <nav aria-label="Main navigation" className="remix-app__header-nav">
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-      <div className="remix-app__main">
-        <div className="container remix-app__main-content">{children}</div>
-      </div>
-    </div>
-  );
+  return <div className="container">{children}</div>;
 }

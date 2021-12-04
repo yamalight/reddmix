@@ -20,7 +20,9 @@ export let loader: LoaderFunction = async ({ request }) => {
   const result = await codeToToken(code);
   const options = result.access_token
     ? {
+        status: 303,
         headers: {
+          Location: '/',
           'Set-Cookie': await redditAuth.serialize(result),
         },
       }
@@ -31,13 +33,13 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 // https://remix.run/guides/routing#index-routes
 export default function RedditRedirect() {
-  const data = useLoaderData();
+  const authData = useLoaderData();
 
   return (
     <div className="container">
       <main>
-        Login successful!
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <p className="font-bold text-xl text-red-800">Error logging in!</p>
+        <pre>{JSON.stringify(authData, null, 2)}</pre>
       </main>
     </div>
   );

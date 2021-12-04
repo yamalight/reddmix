@@ -54,6 +54,11 @@ export default function Index() {
     <>
       <Header loginUrl={loginUrl} />
       <main className="container">
+        {!posts && (
+          <div className="text-center text-2xl font-bold">
+            Please login to view your posts.
+          </div>
+        )}
         {posts && (
           <div className="flex flex-col p-4 gap-8">
             {posts.map((post) => (

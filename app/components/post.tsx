@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { useMemo } from 'react';
+import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import ReactMarkdown from 'react-markdown';
 import Awards from './awards.js';
 
@@ -38,7 +39,7 @@ export default function Post({ post }) {
         </time>
         <Awards awards={post.all_awardings} />
       </div>
-      <p className="p-2 text-2xl font-semibold text-neutral-600 mb-2">
+      <p className="p-2 text-2xl font-semibold text-gray-800 mb-2">
         <a href={`https://reddit.com/${post.permalink}`}>{post.title}</a>
       </p>
       {image && (
@@ -49,8 +50,16 @@ export default function Post({ post }) {
       <div className="text-base text-gray-500 px-4 mt-2 bg-white prose max-w-max">
         <ReactMarkdown>{post.selftext}</ReactMarkdown>
       </div>
+      <div className="flex p-2 my-2 items-center gap-2">
+        <div className="flex items-center gap-1">
+          <BiUpvote className="w-6 h-6" />
+          {post.ups}
+          <BiDownvote className="w-6 h-6" />
+        </div>
+        <a href="#">{post.num_comments} comments</a>
+      </div>
 
-      {/* debuggin json */}
+      {/* debuggin json 
       <details className="mt-6">
         <summary className="text-sm font-medium text-neutral-600">
           Post JSON
@@ -59,6 +68,7 @@ export default function Post({ post }) {
           <code>{JSON.stringify(post, null, 2)}</code>
         </pre>
       </details>
+      */}
     </div>
   );
 }

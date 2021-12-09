@@ -6,9 +6,11 @@ module.exports = {
     extend: {
       height: {
         'screen-70': '70vh',
+        'screen-80': '80vh',
       },
       maxHeight: {
         'screen-70': '70vh',
+        'screen-80': '80vh',
       },
     },
   },

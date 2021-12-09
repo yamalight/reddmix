@@ -10,7 +10,11 @@ export default function ImagePost({ post }) {
 
   return (
     <div className="flex flex-shrink-0 items-center justify-center">
-      <img className="object-contain" src={image} alt={post.title} />
+      <img
+        className="object-contain max-h-screen-80"
+        src={image}
+        alt={post.title}
+      />
     </div>
   );
 }

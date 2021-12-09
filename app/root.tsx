@@ -110,7 +110,7 @@ function Document({
         {title ? <title>{title}</title> : null}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+            __html: `window.ENV = ${JSON.stringify(data?.ENV ?? {})}`,
           }}
         />
         <Meta />
@@ -127,5 +127,5 @@ function Document({
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="container">{children}</div>;
+  return <div className="w-full">{children}</div>;
 }

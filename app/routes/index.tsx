@@ -113,7 +113,7 @@ export default function Index() {
   return (
     <>
       <Header loginUrl={loginUrl} />
-      <main className="container">
+      <main className="w-full">
         {isAll && (
           <div className="text-center text-xl font-bold">
             Showing /r/all.
@@ -122,7 +122,7 @@ export default function Index() {
           </div>
         )}
         {posts && (
-          <div className="flex flex-col p-4 gap-8">
+          <div className="flex flex-col p-4 gap-8 items-center">
             {posts.map((post) => (
               <Post key={post.id} post={post} />
             ))}

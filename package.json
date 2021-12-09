@@ -20,9 +20,9 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
-    "react-markdown": "^6.0.3",
     "react-player": "^2.9.0",
-    "remix": "^1.0.6"
+    "remix": "^1.0.6",
+    "snudown-js": "^3.2.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.0.6",

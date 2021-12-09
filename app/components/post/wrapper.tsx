@@ -5,9 +5,16 @@ import Awards from '../awards.js';
 
 export default function PostWrapper({ post, children }) {
   const date = useMemo(() => new Date(post.created_utc * 1000), [post]);
+  const isProduction = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    return window.ENV?.NODE_ENV !== 'production';
+  }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg shadow-lg border border-gray-100">
+    <div className="flex flex-col overflow-hidden rounded-lg shadow-lg border border-gray-100 w-full max-w-screen-xl">
       <div className="flex p-2 items-center">
         <a href="#" className="text-lg font-bold mx-2">
           r/{post.subreddit}
@@ -26,7 +33,9 @@ export default function PostWrapper({ post, children }) {
         <Awards awards={post.all_awardings} />
       </div>
       <p className="p-2 text-2xl font-semibold text-gray-800 mb-2">
-        <a href={`https://reddit.com/${post.permalink}`}>{post.title}</a>
+        <a href={`https://reddit.com/${post.permalink}`}>
+          {post.title.replaceAll('&amp;', '&')}
+        </a>
       </p>
       {children}
       <div className="flex p-2 my-2 items-center gap-2">
@@ -39,7 +48,7 @@ export default function PostWrapper({ post, children }) {
       </div>
 
       {/* debuggin json  */}
-      {window.ENV.NODE_ENV !== 'production' && (
+      {isProduction && (
         <details className="mt-6">
           <summary className="text-sm font-medium text-neutral-600">
             Post JSON

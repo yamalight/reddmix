@@ -9,9 +9,9 @@ import { getAllFeed } from '~/reddit/client.js';
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
-  const posts = await getAllFeed();
+  const feed = await getAllFeed();
   const loginUrl = generateLoginUrl();
-  return { loginUrl, posts };
+  return { loginUrl, ...feed };
 };
 
 // https://remix.run/api/conventions#meta

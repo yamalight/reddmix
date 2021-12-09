@@ -31,7 +31,7 @@ export default function Post({ post, expanded }) {
   }, [post]);
 
   return (
-    <PostWrapper post={post} flat={expanded}>
+    <PostWrapper post={post} expanded={expanded}>
       {type === 'text' && <TextPost post={post} />}
       {type === 'image' && <ImagePost post={post} />}
       {type === 'gallery' && <ImageGalleryPost post={post} />}

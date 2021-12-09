@@ -17,9 +17,9 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 };
 
 // https://remix.run/api/conventions#meta
-export let meta: MetaFunction = () => {
+export let meta: MetaFunction = ({ params }) => {
   return {
-    title: 'Reddmix - All',
+    title: `Reddmix - ${params.subreddit}`,
     description: 'Welcome to Reddmix!',
   };
 };

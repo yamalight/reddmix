@@ -32,10 +32,20 @@ export default function PostWrapper({ post, children }) {
         </time>
         <Awards awards={post.all_awardings} />
       </div>
-      <p className="p-2 text-2xl font-semibold text-gray-800 mb-2">
+      <p className="flex items-center p-2 text-2xl font-semibold text-gray-800 mb-2">
         <a href={`https://reddit.com/${post.permalink}`}>
           {post.title.replaceAll('&amp;', '&')}
         </a>
+        {post.link_flair_text?.length > 0 && (
+          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-gray-800 rounded ml-2 py-1">
+            {post.link_flair_text}
+          </span>
+        )}
+        {post.whitelist_status === 'promo_adult_nsfw' && (
+          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-red-800 border-red-800 rounded ml-2 py-1">
+            NSFW
+          </span>
+        )}
       </p>
       {children}
       <div className="flex p-2 my-2 items-center gap-2">

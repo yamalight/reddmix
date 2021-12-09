@@ -39,14 +39,16 @@ export default function PostWrapper({ post, children }) {
       </div>
 
       {/* debuggin json  */}
-      <details className="mt-6">
-        <summary className="text-sm font-medium text-neutral-600">
-          Post JSON
-        </summary>
-        <pre className="mt-2">
-          <code>{JSON.stringify(post, null, 2)}</code>
-        </pre>
-      </details>
+      {window.ENV.NODE_ENV !== 'production' && (
+        <details className="mt-6">
+          <summary className="text-sm font-medium text-neutral-600">
+            Post JSON
+          </summary>
+          <pre className="mt-2">
+            <code>{JSON.stringify(post, null, 2)}</code>
+          </pre>
+        </details>
+      )}
     </div>
   );
 }

@@ -1,18 +1,28 @@
-import type { LinksFunction } from 'remix';
 import {
   Links,
+  LinksFunction,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from 'remix';
 import styles from '~/styles/tailwind.css';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: styles }];
+};
+
+export const loader: LoaderFunction = () => {
+  return {
+    ENV: {
+      NODE_ENV: process.env.NODE_ENV,
+    },
+  };
 };
 
 // https://remix.run/api/conventions#default-export
@@ -90,12 +100,19 @@ function Document({
   children: React.ReactNode;
   title?: string;
 }) {
+  const data = useLoaderData();
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         {title ? <title>{title}</title> : null}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         <Meta />
         <Links />
       </head>

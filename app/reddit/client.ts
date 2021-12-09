@@ -34,8 +34,8 @@ export const getFrontpage = async (
   return { posts, after };
 };
 
-export const getAllFeed = async () => {
-  const result = await fetch('https://www.reddit.com/r/all/.json');
+export const getSubFeed = async (subreddit = 'all') => {
+  const result = await fetch(`https://www.reddit.com/r/${subreddit}/.json`);
 
   if (result.status !== 200) {
     const error = new RedditError('Failed to fetch frontpage');

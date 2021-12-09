@@ -10,7 +10,7 @@ import Feed from '~/components/feed.js';
 import Header from '~/components/header.js';
 import { redditAuth } from '~/cookies.js';
 import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
-import { getAllFeed, getFrontpage } from '~/reddit/client.js';
+import { getFrontpage, getSubFeed } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
@@ -38,7 +38,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     }
   }
 
-  const all = await getAllFeed();
+  const all = await getSubFeed();
   const loginUrl = generateLoginUrl();
   return { loginUrl, ...all, isAll: true };
 };

@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { useMemo } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
+import { Link } from 'remix';
 import Awards from '../awards.js';
 
 export default function PostWrapper({ post, children }) {
@@ -16,9 +17,9 @@ export default function PostWrapper({ post, children }) {
   return (
     <div className="flex flex-col overflow-hidden rounded-lg shadow-lg border border-gray-100 w-full max-w-screen-xl">
       <div className="flex p-2 items-center">
-        <a href="#" className="text-lg font-bold mx-2">
+        <Link to={`/r/${post.subreddit}`} className="text-lg font-bold mx-2">
           r/{post.subreddit}
-        </a>
+        </Link>
         <span className="mx-1">•</span>
         <span className="text-sm text-gray-500 mx-2">
           Posted by <a href="#">u/{post.author_fullname}</a>

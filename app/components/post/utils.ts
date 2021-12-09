@@ -21,6 +21,6 @@ export const getGallery = (post) => {
 };
 
 export const getVideo = (post) => {
-  const video = post?.media?.reddit_video?.hls_url;
+  const video = post?.media?.reddit_video?.fallback_url;
   return video?.replace(/&amp;/g, '&');
 };

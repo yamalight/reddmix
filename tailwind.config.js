@@ -3,7 +3,14 @@ module.exports = {
   purge: ['./app/**/*.{ts,tsx}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        'screen-70': '70vh',
+      },
+      maxHeight: {
+        'screen-70': '70vh',
+      },
+    },
   },
   variants: {
     extend: {},

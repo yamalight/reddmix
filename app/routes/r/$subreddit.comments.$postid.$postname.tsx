@@ -34,12 +34,14 @@ export default function PostPage() {
       <Header loginUrl={loginUrl} subreddit={subreddit} />
       <main className="w-full">
         <div className="flex justify-center w-full">
-          <Post post={post} />
+          <Post post={post} expanded />
         </div>
-        <div className="flex flex-col items-center w-full">
-          {comments.map((comment) => (
-            <Comment comment={comment} key={comment.id} />
-          ))}
+        <div className="flex flex-col items-center mt-8 w-full">
+          {comments
+            .filter((c) => c.body?.length > 0)
+            .map((comment) => (
+              <Comment comment={comment} key={comment.id} />
+            ))}
         </div>
       </main>
     </>

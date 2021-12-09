@@ -6,7 +6,7 @@ import TextPost from './text.js';
 import VideoPost from './video.js';
 import PostWrapper from './wrapper.js';
 
-export default function Post({ post }) {
+export default function Post({ post, expanded }) {
   const type = useMemo(() => {
     if (post.post_hint === 'self' || post.is_self) {
       return 'text';
@@ -31,7 +31,7 @@ export default function Post({ post }) {
   }, [post]);
 
   return (
-    <PostWrapper post={post}>
+    <PostWrapper post={post} flat={expanded}>
       {type === 'text' && <TextPost post={post} />}
       {type === 'image' && <ImagePost post={post} />}
       {type === 'gallery' && <ImageGalleryPost post={post} />}

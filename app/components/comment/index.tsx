@@ -5,7 +5,10 @@ import Awards from '../awards.jsx';
 import CommentText from './text.jsx';
 
 export default function Comment({ comment }) {
-  const date = useMemo(() => new Date(comment.created_utc * 1000), [comment]);
+  const date = useMemo(
+    () => (comment.created_utc ? new Date(comment.created_utc * 1000) : -1),
+    [comment]
+  );
   const isProduction = useMemo(() => {
     if (typeof window === 'undefined') {
       return false;
@@ -13,6 +16,10 @@ export default function Comment({ comment }) {
 
     return window.ENV?.NODE_ENV !== 'production';
   }, []);
+
+  if (!comment.body?.length) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col overflow-hidden rounded-lg shadow-md border border-gray-100 w-full max-w-screen-xl">

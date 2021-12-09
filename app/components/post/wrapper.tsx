@@ -1,11 +1,10 @@
 import { formatDistanceToNow } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { BiDownvote, BiLinkExternal, BiUpvote } from 'react-icons/bi';
 import { Link } from 'remix';
 import Awards from '../awards.js';
 
-export default function PostWrapper({ post, children }) {
-  const [hideSpoiler, setHideSpoiler] = useState(post.spoiler);
+export default function PostWrapper({ post, expanded, children }) {
   const date = useMemo(() => new Date(post.created_utc * 1000), [post]);
   const isProduction = useMemo(() => {
     if (typeof window === 'undefined') {
@@ -16,7 +15,11 @@ export default function PostWrapper({ post, children }) {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg shadow-lg border border-gray-100 w-full max-w-screen-xl">
+    <div
+      className={`flex flex-col overflow-hidden ${
+        expanded ? '' : 'rounded-lg shadow-lg border border-gray-100'
+      } w-full max-w-screen-xl`}
+    >
       <div className="flex p-2 items-center">
         <Link to={`/r/${post.subreddit}`} className="text-lg font-bold mx-2">
           r/{post.subreddit}

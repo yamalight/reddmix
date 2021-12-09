@@ -1,10 +1,11 @@
 import { formatDistanceToNow } from 'date-fns';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { Link } from 'remix';
 import Awards from '../awards.js';
 
 export default function PostWrapper({ post, children }) {
+  const [hideSpoiler, setHideSpoiler] = useState(post.spoiler);
   const date = useMemo(() => new Date(post.created_utc * 1000), [post]);
   const isProduction = useMemo(() => {
     if (typeof window === 'undefined') {

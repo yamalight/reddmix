@@ -1,18 +1,26 @@
-import { useEffect, useState } from 'react';
-import * as Snudown from 'snudown-js';
+import { useEffect, useRef, useState } from 'react';
 
 export default function TextPost({ post }) {
-  const [content, setContent] = useState(post.selftext);
+  const Md = useRef();
+  const [plugins, setPlugins] = useState([]);
 
   useEffect(() => {
-    const html = Snudown.markdown(post.selftext);
-    setContent(html);
-  }, [post]);
+    (async () => {
+      // load react-markdown component
+      Md.current = (await import('react-markdown')).default;
+      // load and set markdown plugins
+      const remarkGfm = await import('remark-gfm');
+      setPlugins([remarkGfm]);
+    })();
+  }, []);
 
   return (
-    <div
-      className="text-base text-gray-500 px-4 mt-2 bg-white prose max-w-max"
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
+    <div className="text-base text-gray-500 px-4 mt-2 bg-white prose max-w-max">
+      {Md.current ? (
+        <Md.current children={post.selftext} remarkPlugins={plugins} />
+      ) : (
+        post.selftext
+      )}
+    </div>
   );
 }

@@ -42,7 +42,7 @@ export default function PostWrapper({ post, expanded, children }) {
       </div>
       <div className="flex items-center mb-2">
         <p className="p-2 text-2xl font-semibold text-gray-800">
-          <Link to={`${post.permalink}`}>
+          <Link to={post.permalink}>
             {post.title?.replaceAll?.('&amp;', '&') ?? post.title}
           </Link>
         </p>
@@ -67,7 +67,7 @@ export default function PostWrapper({ post, expanded, children }) {
           {post.ups}
           <BiDownvote className="w-6 h-6" />
         </div>
-        <a href="#">{post.num_comments} comments</a>
+        <Link to={post.permalink}>{post.num_comments} comments</Link>
       </div>
 
       {/* debuggin json  */}

@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   ActionFunction,
   json,
@@ -7,10 +6,9 @@ import {
   redirect,
   useLoaderData,
 } from 'remix';
+import Feed from '~/components/feed.js';
 import Header from '~/components/header.js';
-import Post from '~/components/post/index.js';
 import { redditAuth } from '~/cookies.js';
-import { useIntersectionObserver } from '~/hooks/useIntersectionObserver.js';
 import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
 import { getAllFeed, getFrontpage } from '~/reddit/client.js';
 
@@ -20,7 +18,6 @@ import { getAllFeed, getFrontpage } from '~/reddit/client.js';
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
   let authData = await getAuthData(request);
-  console.log('loader loading things');
   if (authData?.access_token) {
     try {
       const frontpage = await getFrontpage(authData);
@@ -49,7 +46,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 // https://remix.run/api/conventions#meta
 export let meta: MetaFunction = () => {
   return {
-    title: 'Reddmix',
+    title: 'Reddmix - Frontpage',
     description: 'Welcome to Reddmix!',
   };
 };
@@ -73,42 +70,7 @@ export let action: ActionFunction = async ({ request }) => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  const loadMoreRef = useRef();
-  const [posts, setPosts] = useState([]);
-  const [after, setAfter] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const {
-    loginUrl,
-    posts: loaderPosts,
-    after: loaderAfter,
-    isAll,
-  } = useLoaderData();
-
-  useEffect(() => {
-    setPosts(loaderPosts);
-    setAfter(loaderAfter);
-  }, [loaderPosts, loaderAfter]);
-
-  const loadMore = async (isIntersecting: boolean) => {
-    if (!isIntersecting || loading) {
-      return;
-    }
-
-    setLoading(true);
-
-    const res = await fetch('/api/paginate', {
-      method: 'POST',
-      body: JSON.stringify({ after }),
-    }).then((r) => r.json());
-
-    setPosts([...posts].concat(res.posts));
-    setAfter(res.after);
-    setLoading(false);
-  };
-
-  useIntersectionObserver(loadMoreRef, loadMore, {
-    rootMargin: '0px',
-  });
+  const { loginUrl, posts, after, isAll } = useLoaderData();
 
   return (
     <>
@@ -121,19 +83,7 @@ export default function Index() {
             Login to view your frontpage posts.
           </div>
         )}
-        {posts && (
-          <div className="flex flex-col p-4 gap-8 items-center">
-            {posts.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-            {loading && <div>Loading..</div>}
-            {!loading && after && (
-              <button ref={loadMoreRef} type="submit" onClick={loadMore}>
-                Load more
-              </button>
-            )}
-          </div>
-        )}
+        <Feed initialPosts={posts} initialAfter={after} />
       </main>
     </>
   );

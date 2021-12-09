@@ -48,3 +48,26 @@ export const getAllFeed = async () => {
   const posts = json?.data?.children?.map((post) => post.data);
   return { posts, after };
 };
+
+export const getNextFeed = async ({
+  subreddit,
+  after,
+}: {
+  subreddit: string;
+  after: string;
+}) => {
+  const result = await fetch(
+    `https://www.reddit.com/r/${subreddit}/.json?after=${after}`
+  );
+
+  if (result.status !== 200) {
+    const error = new RedditError('Failed to fetch frontpage');
+    error.status = result.status;
+    throw error;
+  }
+
+  const json = await result.json();
+  const newAfter = json?.data?.after;
+  const posts = json?.data?.children?.map((post) => post.data);
+  return { posts, after: newAfter };
+};

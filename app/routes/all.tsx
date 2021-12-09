@@ -1,7 +1,7 @@
 import { LoaderFunction, MetaFunction, useLoaderData } from 'remix';
+import Feed from '~/components/feed.js';
 import Header from '~/components/header.js';
-import Post from '~/components/post/index.js';
-import { generateLoginUrl } from '~/reddit/auth.js';
+import { generateLoginUrl, getAuthData } from '~/reddit/auth.js';
 import { getAllFeed } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
@@ -9,8 +9,9 @@ import { getAllFeed } from '~/reddit/client.js';
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
+  const authData = await getAuthData(request);
   const feed = await getAllFeed();
-  const loginUrl = generateLoginUrl();
+  const loginUrl = authData ? undefined : generateLoginUrl();
   return { loginUrl, ...feed };
 };
 
@@ -24,24 +25,18 @@ export let meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  const { loginUrl, posts } = useLoaderData();
+  const { loginUrl, posts, after } = useLoaderData();
 
   return (
     <>
       <Header loginUrl={loginUrl} />
-      <main className="container">
+      <main className="w-full">
         {!posts && (
           <div className="text-center text-2xl font-bold">
             Could not fetch all reddit posts.
           </div>
         )}
-        {posts && (
-          <div className="flex flex-col p-4 gap-8">
-            {posts.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-          </div>
-        )}
+        <Feed initialPosts={posts} initialAfter={after} subreddit="all" />
       </main>
     </>
   );

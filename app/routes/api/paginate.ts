@@ -1,16 +1,25 @@
 import { ActionFunction, redirect } from 'remix';
 import { getAuthData } from '~/reddit/auth.js';
-import { getFrontpage } from '~/reddit/client.js';
+import { getFrontpage, getNextFeed } from '~/reddit/client.js';
 
 export let action: ActionFunction = async ({ request }) => {
   const authData = await getAuthData(request);
   const body = await request.json();
-  const after = body.after;
+  const { after, subreddit } = body;
   // const count = body.count;
-  if (authData?.access_token) {
+  if (authData?.access_token && !subreddit?.length) {
     try {
       const frontpage = await getFrontpage(authData, { after });
       return frontpage;
+    } catch (error) {
+      return redirect('/');
+    }
+  }
+
+  if (subreddit?.length) {
+    try {
+      const feed = await getNextFeed({ subreddit, after });
+      return feed;
     } catch (error) {
       return redirect('/');
     }

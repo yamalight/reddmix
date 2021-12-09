@@ -25,3 +25,17 @@ export const getFrontpage = async (authData: RedditAuthData) => {
   const posts = json?.data?.children?.map((post) => post.data);
   return posts;
 };
+
+export const getAllFeed = async () => {
+  const result = await fetch('https://www.reddit.com/r/all/.json');
+
+  if (result.status !== 200) {
+    const error = new RedditError('Failed to fetch frontpage');
+    error.status = result.status;
+    throw error;
+  }
+
+  const json = await result.json();
+  const posts = json?.data?.children?.map((post) => post.data);
+  return posts;
+};

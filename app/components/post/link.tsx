@@ -13,9 +13,11 @@ export default function LinkPost({ post }) {
       <div className="text-base text-gray-500 px-4 mt-2 bg-white prose max-w-max">
         <a href={post.url_overridden_by_dest}>{post.url_overridden_by_dest}</a>
       </div>
-      <div className="flex flex-shrink-0 w-20 h-20 items-center justify-center">
-        <img className="object-contain" src={image} alt={post.title} />
-      </div>
+      {image && (
+        <div className="flex flex-shrink-0 w-20 h-20 items-center justify-center">
+          <img className="object-contain" src={image} alt={post.title} />
+        </div>
+      )}
     </div>
   );
 }

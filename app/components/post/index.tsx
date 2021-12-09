@@ -27,7 +27,7 @@ export default function Post({ post }) {
     // if (post.is_poll) {
     // return 'poll';
     // }
-    return 'text';
+    return 'link';
   }, [post]);
 
   return (

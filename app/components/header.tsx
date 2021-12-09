@@ -1,4 +1,4 @@
-import { Link } from 'remix';
+import { NavLink } from 'remix';
 
 export default function Header({ loginUrl }) {
   return (
@@ -20,9 +20,24 @@ export default function Header({ loginUrl }) {
           <span className="ml-3 text-xl">Reddmix</span>
         </a>
         <nav className="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400	flex flex-wrap items-center text-base justify-center">
-          <Link to="/" title="Home" className="mr-5 hover:text-gray-900">
+          <NavLink
+            to="/"
+            title="Home"
+            className={({ isActive }) =>
+              `mr-5 hover:text-gray-900 ${isActive ? 'font-bold' : ''}`
+            }
+          >
             Home
-          </Link>
+          </NavLink>
+          <NavLink
+            to="/all"
+            title="All"
+            className={({ isActive }) =>
+              `mr-5 hover:text-gray-900 ${isActive ? 'font-bold' : ''}`
+            }
+          >
+            All
+          </NavLink>
         </nav>
         {loginUrl && (
           <a

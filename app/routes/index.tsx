@@ -3,7 +3,7 @@ import Header from '~/components/header.js';
 import Post from '~/components/post/index.js';
 import { redditAuth } from '~/cookies.js';
 import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
-import { getFrontpage } from '~/reddit/client.js';
+import { getAllFeed, getFrontpage } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
@@ -34,8 +34,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     }
   }
 
+  const posts = await getAllFeed();
   const loginUrl = generateLoginUrl();
-  return { loginUrl };
+  return { loginUrl, posts, isAll: true };
 };
 
 // https://remix.run/api/conventions#meta
@@ -48,15 +49,17 @@ export let meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  const { loginUrl, posts } = useLoaderData();
+  const { loginUrl, posts, isAll } = useLoaderData();
 
   return (
     <>
       <Header loginUrl={loginUrl} />
       <main className="container">
-        {!posts && (
-          <div className="text-center text-2xl font-bold">
-            Please login to view your posts.
+        {isAll && (
+          <div className="text-center text-xl font-bold">
+            Showing /r/all.
+            <br />
+            Login to view your frontpage posts.
           </div>
         )}
         {posts && (

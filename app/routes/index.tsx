@@ -1,6 +1,6 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import Header from '~/components/header.js';
-import Post from '~/components/post.js';
+import Post from '~/components/post/index.js';
 import { redditAuth } from '~/cookies.js';
 import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
 import { getFrontpage } from '~/reddit/client.js';

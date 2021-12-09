@@ -71,3 +71,30 @@ export const getNextFeed = async ({
   const posts = json?.data?.children?.map((post) => post.data);
   return { posts, after: newAfter };
 };
+
+export const getPost = async ({
+  subreddit,
+  postid,
+  postname,
+}: {
+  subreddit: string;
+  postid: string;
+  postname: string;
+}) => {
+  const result = await fetch(
+    `https://reddit.com/r/${subreddit}/comments/${postid}/${postname}/.json`
+  );
+
+  if (result.status !== 200) {
+    const error = new RedditError('Failed to fetch frontpage');
+    error.status = result.status;
+    throw error;
+  }
+
+  const json = await result.json();
+  const [post, comments] = json;
+  const newAfter = comments?.data?.after;
+  const postInfo = post?.data.children[0]?.data;
+  const allComments = comments?.data?.children?.map((comment) => comment.data);
+  return { post: postInfo, comments: allComments, after: newAfter };
+};

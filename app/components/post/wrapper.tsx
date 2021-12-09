@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { useMemo, useState } from 'react';
-import { BiDownvote, BiUpvote } from 'react-icons/bi';
+import { BiDownvote, BiLinkExternal, BiUpvote } from 'react-icons/bi';
 import { Link } from 'remix';
 import Awards from '../awards.js';
 
@@ -23,7 +23,10 @@ export default function PostWrapper({ post, children }) {
         </Link>
         <span className="mx-1">•</span>
         <span className="text-sm text-gray-500 mx-2">
-          Posted by <a href="#">u/{post.author_fullname}</a>
+          Posted by{' '}
+          <a href={`https://www.reddit.com/user/${post.author_fullname}`}>
+            u/{post.author_fullname}
+          </a>
         </span>
         <time
           dateTime={date.toISOString()}
@@ -34,21 +37,26 @@ export default function PostWrapper({ post, children }) {
         </time>
         <Awards awards={post.all_awardings} />
       </div>
-      <p className="flex items-center p-2 text-2xl font-semibold text-gray-800 mb-2">
-        <a href={`https://reddit.com/${post.permalink}`}>
-          {post.title.replaceAll('&amp;', '&')}
+      <div className="flex items-center mb-2">
+        <p className="p-2 text-2xl font-semibold text-gray-800">
+          <Link to={`${post.permalink}`}>
+            {post.title.replaceAll('&amp;', '&')}
+          </Link>
+        </p>
+        <a href={`https://reddit.com/${post.permalink}`} className="ml-1">
+          <BiLinkExternal />
         </a>
         {post.link_flair_text?.length > 0 && (
-          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-gray-800 rounded ml-2 py-1">
+          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-gray-800 rounded ml-1 py-1">
             {post.link_flair_text}
           </span>
         )}
         {post.whitelist_status === 'promo_adult_nsfw' && (
-          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-red-800 border-red-800 rounded ml-2 py-1">
+          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-red-800 border-red-800 rounded ml-1 py-1">
             NSFW
           </span>
         )}
-      </p>
+      </div>
       {children}
       <div className="flex p-2 my-2 items-center gap-2">
         <div className="flex items-center gap-1">

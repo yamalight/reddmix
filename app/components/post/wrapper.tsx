@@ -43,7 +43,7 @@ export default function PostWrapper({ post, expanded, children }) {
       <div className="flex items-center mb-2">
         <p className="p-2 text-2xl font-semibold text-gray-800">
           <Link to={`${post.permalink}`}>
-            {post.title.replaceAll('&amp;', '&')}
+            {post.title?.replaceAll?.('&amp;', '&') ?? post.title}
           </Link>
         </p>
         <a href={`https://reddit.com/${post.permalink}`} className="ml-1">

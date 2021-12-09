@@ -8,8 +8,15 @@ export class RedditError extends Error {
   }
 }
 
-export const getFrontpage = async (authData: RedditAuthData) => {
-  const result = await fetch('https://oauth.reddit.com/', {
+export const getFrontpage = async (
+  authData: RedditAuthData,
+  { after: afterToken }: { after?: string } = {}
+) => {
+  const url =
+    afterToken?.length > 0
+      ? `https://oauth.reddit.com/?after=${afterToken}`
+      : 'https://oauth.reddit.com/';
+  const result = await fetch(url, {
     headers: {
       Authorization: `Bearer ${authData.access_token}`,
     },
@@ -22,8 +29,9 @@ export const getFrontpage = async (authData: RedditAuthData) => {
   }
 
   const json = await result.json();
+  const after = json?.data?.after;
   const posts = json?.data?.children?.map((post) => post.data);
-  return posts;
+  return { posts, after };
 };
 
 export const getAllFeed = async () => {
@@ -36,6 +44,7 @@ export const getAllFeed = async () => {
   }
 
   const json = await result.json();
+  const after = json?.data?.after;
   const posts = json?.data?.children?.map((post) => post.data);
-  return posts;
+  return { posts, after };
 };

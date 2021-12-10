@@ -28,7 +28,7 @@ export default function ImageGalleryPost({ post }) {
         </button>
         <div className="flex flex-1 items-center justify-center">
           <img
-            className="object-contain max-h-screen-80"
+            className="object-contain max-h-[80vh]"
             src={images[index].url}
             alt={post.title}
           />

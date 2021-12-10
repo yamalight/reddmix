@@ -6,7 +6,7 @@ export default function VideoPost({ post }) {
   const video = useMemo(() => getVideo(post), [post]);
 
   return (
-    <div className="flex items-center justify-center max-h-screen-70 h-screen-70">
+    <div className="flex items-center justify-center max-h-[70vh] h-[70vh]">
       <ReactPlayer url={video} controls width="100%" height="100%" />
     </div>
   );

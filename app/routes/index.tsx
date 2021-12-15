@@ -38,7 +38,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     }
   }
 
-  const all = await getSubFeed();
+  const all = await getSubFeed({ authData });
   const loginUrl = generateLoginUrl();
   return { loginUrl, ...all, isAll: true };
 };

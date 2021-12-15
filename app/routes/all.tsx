@@ -10,7 +10,7 @@ import { getSubFeed } from '~/reddit/client.js';
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
   const authData = await getAuthData(request);
-  const feed = await getSubFeed();
+  const feed = await getSubFeed({ authData });
   const loginUrl = authData ? undefined : generateLoginUrl();
   return { loginUrl, ...feed };
 };
@@ -30,7 +30,7 @@ export default function Index() {
   return (
     <>
       <Header loginUrl={loginUrl} />
-      <main className="w-full">
+      <main className="w-full pt-16">
         {!posts && (
           <div className="text-center text-2xl font-bold">
             Could not fetch all reddit posts.

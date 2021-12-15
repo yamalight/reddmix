@@ -11,7 +11,7 @@ import { getSubFeed } from '~/reddit/client.js';
 export let loader: LoaderFunction = async ({ request, params }) => {
   const authData = await getAuthData(request);
   const subreddit = params.subreddit;
-  const feed = await getSubFeed(subreddit);
+  const feed = await getSubFeed({ authData, subreddit });
   const loginUrl = authData ? undefined : generateLoginUrl();
   return { loginUrl, subreddit, ...feed };
 };
@@ -31,7 +31,7 @@ export default function Subreddit() {
   return (
     <>
       <Header loginUrl={loginUrl} subreddit={subreddit} />
-      <main className="w-full">
+      <main className="w-full pt-16">
         {!posts && (
           <div className="text-center text-2xl font-bold">
             Could not fetch all reddit posts.

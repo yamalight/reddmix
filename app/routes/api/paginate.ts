@@ -18,7 +18,7 @@ export let action: ActionFunction = async ({ request }) => {
 
   if (subreddit?.length) {
     try {
-      const feed = await getNextFeed({ subreddit, after });
+      const feed = await getNextFeed({ authData, subreddit, after });
       return feed;
     } catch (error) {
       return redirect('/');

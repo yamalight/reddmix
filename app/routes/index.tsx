@@ -75,7 +75,7 @@ export default function Index() {
   return (
     <>
       <Header loginUrl={loginUrl} />
-      <main className="w-full">
+      <main className="w-full pt-16">
         {isAll && (
           <div className="text-center text-xl font-bold">
             Showing /r/all.

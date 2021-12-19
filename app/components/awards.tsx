@@ -14,7 +14,7 @@ const getAwardUrl = (award) => {
 
 export default function Awards({ awards }) {
   return (
-    <div className="ml-2 flex items-center gap-2">
+    <div className="ml-2 flex items-center gap-2 text-gray-900 dark:text-gray-400">
       {awards.map((award) => (
         <div className="flex items-center" key={award.id}>
           <img className="w-4 h-4" src={getAwardUrl(award)} alt={award.name} />{' '}

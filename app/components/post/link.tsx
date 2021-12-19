@@ -10,7 +10,7 @@ export default function LinkPost({ post }) {
 
   return (
     <div className="flex items-center justify-between pr-4">
-      <div className="text-base text-gray-500 px-4 mt-2 bg-white prose max-w-max">
+      <div className="text-base underline text-gray-500 decoration-slate-500 dark:text-gray-300 dark:decoration-slate-200 px-4 mt-2 max-w-max">
         <a href={post.url_overridden_by_dest}>{post.url_overridden_by_dest}</a>
       </div>
       {image && (

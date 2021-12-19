@@ -44,7 +44,7 @@ export default function PostPage() {
       return;
     }
     setComments(baseComments);
-    setMore(baseMore.children);
+    setMore(baseMore?.children ?? []);
   }, [baseComments, baseMore]);
 
   const loadMore = async () => {
@@ -77,7 +77,7 @@ export default function PostPage() {
           {!post && <div className="text-center">Loading...</div>}
           {post && <Post post={post} expanded />}
         </div>
-        <div className="flex flex-col items-center my-8 w-full">
+        <div className="flex flex-col items-center my-8 gap-4 w-full">
           {comments.map((comment) => (
             <Comment comment={comment} key={comment.id} />
           ))}

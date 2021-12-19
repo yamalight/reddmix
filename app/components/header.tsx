@@ -1,12 +1,13 @@
 import { Link, NavLink } from 'remix';
+import { DarkModeToggle } from './darkMode.js';
 
 export default function Header({ loginUrl, subreddit }) {
   return (
-    <header className="bg-white text-gray-600 body-font w-full fixed">
+    <header className="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-200 body-font w-full fixed z-10">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <Link
           to="/"
-          className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
+          className="flex title-font font-medium items-center text-gray-900 dark:text-gray-100 mb-4 md:mb-0"
         >
           <span className="ml-3 text-xl">Reddmix</span>
         </Link>
@@ -15,7 +16,9 @@ export default function Header({ loginUrl, subreddit }) {
             to="/"
             title="Home"
             className={({ isActive }) =>
-              `mr-5 hover:text-gray-900 ${isActive ? 'font-bold' : ''}`
+              `mr-5 hover:text-gray-900 dark:hover:text-gray-400 ${
+                isActive ? 'font-bold' : ''
+              }`
             }
           >
             Home
@@ -24,7 +27,9 @@ export default function Header({ loginUrl, subreddit }) {
             to="/all"
             title="All"
             className={({ isActive }) =>
-              `mr-5 hover:text-gray-900 ${isActive ? 'font-bold' : ''}`
+              `mr-5 hover:text-gray-900 dark:hover:text-gray-400 ${
+                isActive ? 'font-bold' : ''
+              }`
             }
           >
             All
@@ -34,7 +39,9 @@ export default function Header({ loginUrl, subreddit }) {
               to={`/r/${subreddit}`}
               title={subreddit}
               className={({ isActive }) =>
-                `mr-5 hover:text-gray-900 ${isActive ? 'font-bold' : ''}`
+                `mr-5 hover:text-gray-900 dark:hover:text-gray-400 ${
+                  isActive ? 'font-bold' : ''
+                }`
               }
             >
               r/{subreddit}
@@ -61,10 +68,11 @@ export default function Header({ loginUrl, subreddit }) {
           </a>
         )}
         {!loginUrl && (
-          <div className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 rounded text-base mt-4 md:mt-0">
+          <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 border-0 py-1 px-3 rounded text-base mt-4 md:mt-0">
             You are logged in
           </div>
         )}
+        <DarkModeToggle />
       </div>
     </header>
   );

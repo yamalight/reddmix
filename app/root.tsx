@@ -11,17 +11,22 @@ import {
   useLoaderData,
 } from 'remix';
 import styles from '~/styles/tailwind.css';
+import {
+  DarkThemeWrapper,
+  getDarkMode,
+  useDarkMode,
+} from './components/darkMode.js';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: styles }];
 };
 
-export const loader: LoaderFunction = () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const dark = await getDarkMode(request);
+
   return {
-    ENV: {
-      NODE_ENV: process.env.NODE_ENV,
-    },
+    dark,
   };
 };
 
@@ -30,9 +35,7 @@ export const loader: LoaderFunction = () => {
 export default function App() {
   return (
     <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <Outlet />
     </Document>
   );
 }
@@ -42,17 +45,15 @@ export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
   return (
     <Document title="Error!">
-      <Layout>
-        <div>
-          <h1>There was an error</h1>
-          <p>{error.message}</p>
-          <hr />
-          <p>
-            Hey, developer, you should replace this with what you want your
-            users to see.
-          </p>
-        </div>
-      </Layout>
+      <div className="text-gray-900 dark:text-gray-100">
+        <h1>There was an error</h1>
+        <p>{error.message}</p>
+        <hr />
+        <p>
+          Hey, developer, you should replace this with what you want your users
+          to see.
+        </p>
+      </div>
     </Document>
   );
 }
@@ -83,12 +84,10 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <Layout>
-        <h1>
-          {caught.status}: {caught.statusText}
-        </h1>
-        {message}
-      </Layout>
+      <h1>
+        {caught.status}: {caught.statusText}
+      </h1>
+      {message}
     </Document>
   );
 }
@@ -103,29 +102,37 @@ function Document({
   const data = useLoaderData();
 
   return (
-    <html lang="en">
+    <DarkThemeWrapper defaultValue={data.dark}>
+      <Layout title={title}>{children}</Layout>
+    </DarkThemeWrapper>
+  );
+}
+
+function Layout({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
+  const data = useLoaderData();
+  const { isDark } = useDarkMode();
+
+  return (
+    <html lang="en" className={isDark ? 'dark' : ''}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         {title ? <title>{title}</title> : null}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data?.ENV ?? {})}`,
-          }}
-        />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="bg-gray-50 dark:bg-gray-900">
+        <div className="w-full">{children}</div>
         <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   );
-}
-
-function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="w-full">{children}</div>;
 }

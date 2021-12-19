@@ -24,7 +24,7 @@ export default function ImageGalleryPost({ post }) {
           onClick={prevPage}
           disabled={index === 0}
         >
-          <AiFillCaretLeft className="w-full h-full" />
+          <AiFillCaretLeft className="w-full h-full text-gray-900 dark:text-gray-100" />
         </button>
         <div className="flex flex-1 items-center justify-center">
           <img
@@ -38,7 +38,7 @@ export default function ImageGalleryPost({ post }) {
           onClick={nextPage}
           disabled={index === images.length - 1}
         >
-          <AiFillCaretRight className="w-full h-full" />
+          <AiFillCaretRight className="w-full h-full text-gray-900 dark:text-gray-100" />
         </button>
       </div>
     </>

@@ -58,69 +58,72 @@ export default function Comment({ comment, level = 0 }) {
   }
 
   return (
-    <div
-      className={`flex flex-col overflow-hidden border-l-2 border-opacity-25 dark:border-opacity-40 ${colors[level]} dark:${colorsDark[level]} w-full max-w-screen-xl`}
-    >
-      <div className="flex p-2 items-center">
-        <button
-          className="font-bold text-gray-800 dark:text-gray-300"
-          onClick={() => setExpanded((e) => !e)}
-        >
-          {expanded ? (
-            <RiArrowDownSFill className="w-6 h-6" />
-          ) : (
-            <RiArrowRightSFill className="w-6 h-6" />
-          )}
-        </button>
-        <span className="text-sm font-bold mr-2 text-gray-600 dark:text-gray-400">
-          <a href={`https://www.reddit.com/user/${comment.author}`}>
-            {comment.author}
-          </a>
-        </span>
-        <span className="mx-1 text-gray-600 dark:text-gray-400">•</span>
-        <time
-          dateTime={date.toISOString()}
-          title={date.toLocaleString()}
-          className="text-xs text-gray-500 dark:text-gray-400 mx-2"
-        >
-          {formatDistanceToNow(date, { addSuffix: true })}
-        </time>
-        <Awards awards={comment.all_awardings} />
-      </div>
-      {expanded && (
-        <>
-          <CommentText comment={comment} />
-          <div className="flex p-2 my-2 items-center gap-2 text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <BiUpvote className="w-5 h-5" />
-              {comment.ups}
-              <BiDownvote className="w-5 h-5" />
+    <div className="flex overflow-hidden w-full max-w-screen-xl">
+      <button
+        className="flex flex-col w-4 items-center font-bold text-gray-800 dark:text-gray-300"
+        onClick={() => setExpanded((e) => !e)}
+      >
+        {expanded ? (
+          <RiArrowDownSFill className="w-6 h-6" />
+        ) : (
+          <RiArrowRightSFill className="w-6 h-6" />
+        )}
+        <div
+          className={`w-1 h-full border-l-2 border-opacity-25 dark:border-opacity-40 ${colors[level]} dark:${colorsDark[level]}`}
+        />
+      </button>
+      <div className="flex flex-col">
+        <div className="flex p-2 items-center">
+          <span className="text-sm font-bold mr-2 text-gray-600 dark:text-gray-400">
+            <a href={`https://www.reddit.com/user/${comment.author}`}>
+              {comment.author}
+            </a>
+          </span>
+          <span className="mx-1 text-gray-600 dark:text-gray-400">•</span>
+          <time
+            dateTime={date.toISOString()}
+            title={date.toLocaleString()}
+            className="text-xs text-gray-500 dark:text-gray-400 mx-2"
+          >
+            {formatDistanceToNow(date, { addSuffix: true })}
+          </time>
+          <Awards awards={comment.all_awardings} />
+        </div>
+        {expanded && (
+          <>
+            <CommentText comment={comment} />
+            <div className="flex p-2 my-2 items-center gap-2 text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <BiUpvote className="w-5 h-5" />
+                {comment.ups}
+                <BiDownvote className="w-5 h-5" />
+              </div>
             </div>
-          </div>
 
-          {/* debuggin json  */}
-          {process.env.NODE_ENV === 'development' && (
-            <details className="mt-6">
-              <summary className="text-sm font-medium text-neutral-600">
-                Comment JSON
-              </summary>
-              <pre className="mt-2">
-                <code>{JSON.stringify(comment, null, 2)}</code>
-              </pre>
-            </details>
-          )}
+            {/* debuggin json  */}
+            {process.env.NODE_ENV === 'development' && (
+              <details className="mt-6">
+                <summary className="text-sm font-medium text-neutral-600">
+                  Comment JSON
+                </summary>
+                <pre className="mt-2">
+                  <code>{JSON.stringify(comment, null, 2)}</code>
+                </pre>
+              </details>
+            )}
 
-          <div className="pl-8">
-            {comment?.replies?.data?.children.map((child) => (
-              <Comment
-                key={child.data.id}
-                comment={child.data}
-                level={level + 1}
-              />
-            ))}
-          </div>
-        </>
-      )}
+            <div className="pl-8">
+              {comment?.replies?.data?.children.map((child) => (
+                <Comment
+                  key={child.data.id}
+                  comment={child.data}
+                  level={level + 1}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

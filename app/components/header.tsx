@@ -1,13 +1,26 @@
 import { Link, NavLink } from 'remix';
 import { DarkModeToggle } from './darkMode.js';
 
-export default function Header({ loginUrl, subreddit }) {
+export default function Header({
+  loginUrl,
+  subreddit,
+}: {
+  loginUrl?: string;
+  subreddit?: string;
+}) {
+  const logout = async () => {
+    await fetch('/api/logout', {
+      method: 'POST',
+    });
+    window.location.reload();
+  };
+
   return (
-    <header className="bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-200 body-font w-full fixed z-10">
-      <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <header className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-200 shadow-md shadow-gray-100 dark:shadow-gray-800 body-font w-full fixed z-10">
+      <div className="container mx-auto flex flex-wrap px-5 py-3 flex-col md:flex-row items-center">
         <Link
           to="/"
-          className="flex title-font font-medium items-center text-gray-900 dark:text-gray-100 mb-4 md:mb-0"
+          className="flex title-font font-medium items-center text-gray-900 dark:text-gray-100"
         >
           <span className="ml-3 text-xl">Reddmix</span>
         </Link>
@@ -51,26 +64,18 @@ export default function Header({ loginUrl, subreddit }) {
         {loginUrl && (
           <a
             href={loginUrl}
-            className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+            className="inline-flex items-center bg-gray-200 dark:bg-gray-900 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
           >
             Login
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
           </a>
         )}
         {!loginUrl && (
-          <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 border-0 py-1 px-3 rounded text-base mt-4 md:mt-0">
-            You are logged in
-          </div>
+          <button
+            className="inline-flex items-center bg-gray-200 dark:bg-gray-900 border-0 py-1 px-3 rounded text-base mt-4 md:mt-0"
+            onClick={logout}
+          >
+            Logout
+          </button>
         )}
         <DarkModeToggle />
       </div>

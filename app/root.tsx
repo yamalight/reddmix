@@ -102,7 +102,7 @@ function Document({
   const data = useLoaderData();
 
   return (
-    <DarkThemeWrapper defaultValue={data.dark}>
+    <DarkThemeWrapper defaultValue={data?.dark ?? false}>
       <Layout title={title}>{children}</Layout>
     </DarkThemeWrapper>
   );
@@ -115,7 +115,6 @@ function Layout({
   children: React.ReactNode;
   title?: string;
 }) {
-  const data = useLoaderData();
   const { isDark } = useDarkMode();
 
   return (
@@ -127,7 +126,7 @@ function Layout({
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-50 dark:bg-gray-900">
+      <body className="bg-white dark:bg-gray-900">
         <div className="w-full">{children}</div>
         <ScrollRestoration />
         <Scripts />

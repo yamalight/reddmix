@@ -77,7 +77,7 @@ export default function Index() {
       <Header loginUrl={loginUrl} />
       <main className="w-full pt-16">
         {isAll && (
-          <div className="text-center text-xl font-bold">
+          <div className="text-center text-xl font-bold dark:text-gray-400">
             Showing /r/all.
             <br />
             Login to view your frontpage posts.

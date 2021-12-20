@@ -12,18 +12,18 @@ export default function PostWrapper({ post, expanded, children }) {
       className={`flex flex-col overflow-hidden ${
         expanded
           ? ''
-          : 'rounded-lg shadow-lg border border-gray-100 dark:border-gray-800'
+          : 'rounded-lg shadow-md shadow-gray-100 dark:shadow-gray-800 border border-gray-100 dark:border-gray-800'
       } w-full max-w-screen-xl dark:shadow-gray-800 bg-gray-50 dark:bg-gray-800`}
     >
       <div className="flex p-2 items-center">
         <Link
           to={`/r/${post.subreddit}`}
-          className="text-lg font-bold mx-2 text-gray-900 dark:text-gray-100"
+          className="text-lg font-bold mx-2 text-gray-900 dark:text-gray-100 min-w-fit"
         >
           r/{post.subreddit}
         </Link>
-        <span className="mx-1">•</span>
-        <span className="text-sm text-gray-500 dark:text-gray-400 mx-2">
+        <span className="mx-1 text-gray-900 dark:text-gray-100">•</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400 mx-2 min-w-fit">
           Posted by{' '}
           <a href={`https://www.reddit.com/user/${post.author_fullname}`}>
             u/{post.author_fullname}
@@ -32,7 +32,7 @@ export default function PostWrapper({ post, expanded, children }) {
         <time
           dateTime={date.toISOString()}
           title={date.toLocaleString()}
-          className="text-sm text-gray-500 dark:text-gray-400 mx-2"
+          className="text-sm text-gray-500 dark:text-gray-400 mx-2 min-w-fit"
         >
           {formatDistanceToNow(date, { addSuffix: true })}
         </time>

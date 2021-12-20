@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { getImage } from './utils.js';
 
 export default function LinkPost({ post }) {
-  const image = useMemo(() => getImage(post), [post]);
+  const { image } = useMemo(() => getImage(post), [post]);
 
   if (!post.url_overridden_by_dest) {
     return null;

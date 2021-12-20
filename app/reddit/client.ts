@@ -13,7 +13,7 @@ export const getFrontpage = async (
   { after: afterToken }: { after?: string } = {}
 ) => {
   const url =
-    afterToken?.length > 0
+    (afterToken?.length ?? 0) > 0
       ? `https://oauth.reddit.com/?after=${afterToken}`
       : 'https://oauth.reddit.com/';
   const result = await fetch(url, {
@@ -42,7 +42,7 @@ export const getSubFeed = async ({
   subreddit?: string;
 }) => {
   let result;
-  if (authData) {
+  if (authData?.access_token) {
     result = await fetch(`https://oauth.reddit.com/r/${subreddit}/.json`, {
       headers: {
         Authorization: `Bearer ${authData.access_token}`,

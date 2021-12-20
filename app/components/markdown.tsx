@@ -9,7 +9,7 @@ export default function Markdown({ text }) {
       // load react-markdown component
       Md.current = (await import('react-markdown')).default;
       // load and set markdown plugins
-      const remarkGfm = await import('remark-gfm');
+      const remarkGfm = (await import('remark-gfm')).default;
       setPlugins([remarkGfm]);
     })();
   }, []);

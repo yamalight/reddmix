@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { RiArrowDownSFill, RiArrowRightSFill } from 'react-icons/ri';
 import Awards from '../awards.jsx';
@@ -47,21 +47,33 @@ const colorsDark = [
 ];
 
 export default function Comment({ comment, level = 0 }) {
+  const commentRef = useRef<HTMLElement>();
   const [expanded, setExpanded] = useState(true);
   const date = useMemo(
     () => (comment.created_utc ? new Date(comment.created_utc * 1000) : -1),
     [comment]
   );
 
+  const toggleCollapsed = () => {
+    setExpanded(!expanded);
+    // if top-level comment - scroll to it
+    if (expanded && commentRef.current && level === 0) {
+      commentRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (!comment.body?.length) {
     return null;
   }
 
   return (
-    <div className="flex overflow-hidden w-full max-w-screen-xl">
+    <div
+      className="flex overflow-hidden w-full max-w-screen-xl"
+      ref={commentRef}
+    >
       <button
         className="flex flex-col w-4 items-center font-bold text-gray-800 dark:text-gray-300"
-        onClick={() => setExpanded((e) => !e)}
+        onClick={toggleCollapsed}
       >
         {expanded ? (
           <RiArrowDownSFill className="w-6 h-6" />

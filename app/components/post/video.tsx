@@ -33,18 +33,25 @@ export default function VideoPost({ post }) {
   }, [playerRef, video, fallback]);
 
   return (
-    <div className="flex items-center justify-center max-h-[70vh] h-[70vh]">
+    <>
       {video && (
-        <video
-          ref={playerRef}
-          poster={poster}
-          muted
-          preload="auto"
-          controls
-          className="h-full w-full aspect-video"
+        <div className="flex items-center justify-center max-h-[70vh] h-[70vh]">
+          <video
+            ref={playerRef}
+            poster={poster}
+            muted
+            preload="auto"
+            controls
+            className="h-full w-full aspect-video"
+          />
+        </div>
+      )}
+      {embed && (
+        <div
+          className="flex items-center justify-center max-h-[70vh] h-[70vh]"
+          dangerouslySetInnerHTML={{ __html: embed }}
         />
       )}
-      {embed && <div dangerouslySetInnerHTML={{ __html: embed }} />}
-    </div>
+    </>
   );
 }

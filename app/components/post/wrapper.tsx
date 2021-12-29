@@ -64,8 +64,8 @@ export default function PostWrapper({ post, expanded, children }) {
         <span className="mx-1 text-gray-900 dark:text-gray-200">•</span>
         <span className="text-sm text-gray-500 dark:text-gray-300 mx-2 min-w-fit">
           Posted by{' '}
-          <a href={`https://www.reddit.com/user/${post.author_fullname}`}>
-            u/{post.author_fullname}
+          <a href={`https://www.reddit.com/user/${post.author}`}>
+            u/{post.author}
           </a>
         </span>
         <time

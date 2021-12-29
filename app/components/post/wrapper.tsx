@@ -54,7 +54,7 @@ export default function PostWrapper({ post, expanded, children }) {
         expanded ? '' : 'rounded-lg border border-gray-100 dark:border-gray-700'
       } w-full max-w-screen-xl bg-gray-100 dark:bg-gray-700`}
     >
-      <div className="flex p-2 items-center">
+      <div className="flex flex-wrap p-2 items-center">
         <Link
           to={`/r/${post.subreddit}`}
           className="text-lg font-bold mx-2 text-gray-900 dark:text-gray-100 min-w-fit"
@@ -87,7 +87,7 @@ export default function PostWrapper({ post, expanded, children }) {
         </p>
         <a
           href={`https://reddit.com/${post.permalink}`}
-          className="ml-1 text-gray-900 dark:text-gray-200"
+          className="ml-1 px-2 text-gray-900 dark:text-gray-200"
         >
           <BiLinkExternal />
         </a>

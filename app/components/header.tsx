@@ -16,7 +16,7 @@ export default function Header({
   };
 
   return (
-    <header className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 shadow-md shadow-gray-100 dark:shadow-gray-800 body-font w-full fixed z-10">
+    <header className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 body-font w-full fixed z-10">
       <div className="container mx-auto flex flex-wrap px-5 py-3 flex-col md:flex-row items-center">
         <Link
           to="/"

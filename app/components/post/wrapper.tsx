@@ -12,10 +12,8 @@ export default function PostWrapper({ post, expanded, children }) {
   return (
     <div
       className={`flex flex-col overflow-hidden ${
-        expanded
-          ? ''
-          : 'rounded-lg shadow-md shadow-gray-100 dark:shadow-gray-700 border border-gray-100 dark:border-gray-700'
-      } w-full max-w-screen-xl dark:shadow-gray-700 bg-gray-100 dark:bg-gray-700`}
+        expanded ? '' : 'rounded-lg border border-gray-100 dark:border-gray-700'
+      } w-full max-w-screen-xl bg-gray-100 dark:bg-gray-700`}
     >
       <div className="flex p-2 items-center">
         <Link

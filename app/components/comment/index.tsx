@@ -46,7 +46,7 @@ const colorsDark = [
   'border-indigo-700',
 ];
 
-export default function Comment({ comment, level = 0 }) {
+export default function Comment({ comment, opName, level = 0 }) {
   const commentRef = useRef<HTMLElement>();
   const [expanded, setExpanded] = useState(true);
   const [vote, setVote] = useState(() =>
@@ -125,7 +125,13 @@ export default function Comment({ comment, level = 0 }) {
       </button>
       <div className="flex flex-col">
         <div className="flex p-2 items-center">
-          <span className="text-sm font-bold mr-2 text-gray-600 dark:text-gray-400">
+          <span
+            className={`text-sm font-bold mr-2 ${
+              comment.author === opName
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-600 dark:text-gray-400'
+            }`}
+          >
             <a href={`https://www.reddit.com/user/${comment.author}`}>
               {comment.author}
             </a>
@@ -177,6 +183,7 @@ export default function Comment({ comment, level = 0 }) {
                   key={child.data.id}
                   comment={child.data}
                   level={level + 1}
+                  opName={opName}
                 />
               ))}
             </div>

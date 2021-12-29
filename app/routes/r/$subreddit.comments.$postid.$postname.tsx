@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import Comment from '~/components/comment/index.js';
 import Header from '~/components/header.js';
@@ -53,6 +53,7 @@ export default function PostPage() {
     comments: baseComments,
     more: baseMore,
   } = useLoaderData();
+  const opName = useMemo(() => post.author, [post]);
 
   useEffect(() => {
     if (comments.length) {
@@ -94,7 +95,7 @@ export default function PostPage() {
         </div>
         <div className="flex flex-col items-center my-8 gap-4 w-full">
           {comments.map((comment) => (
-            <Comment comment={comment} key={comment.id} />
+            <Comment key={comment.id} comment={comment} opName={opName} />
           ))}
 
           {!loginUrl && more.length > 0 && !loading && (

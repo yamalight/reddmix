@@ -1,7 +1,11 @@
-import { LoaderFunction, MetaFunction, useLoaderData } from 'remix';
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import Feed from '~/components/feed.js';
 import Header from '~/components/header.js';
-import { generateLoginUrl, getAuthData } from '~/reddit/auth.js';
+import {
+  executeWithTokenRefresh,
+  generateLoginUrl,
+  getAuthData,
+} from '~/reddit/auth.js';
 import { getSubFeed } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
@@ -10,9 +14,20 @@ import { getSubFeed } from '~/reddit/client.js';
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
   const authData = await getAuthData(request);
-  const feed = await getSubFeed({ authData });
   const loginUrl = authData ? undefined : generateLoginUrl();
-  return { loginUrl, ...feed };
+  const result = await executeWithTokenRefresh(
+    (authData) => getSubFeed({ authData }),
+    request
+  );
+  if (result) {
+    const { error, data, options } = result;
+    if (error) {
+      return { error };
+    }
+    return json({ loginUrl, ...data }, options);
+  }
+
+  return { error: 'Error fetching all!' };
 };
 
 // https://remix.run/api/conventions#meta

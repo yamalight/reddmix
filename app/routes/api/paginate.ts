@@ -1,5 +1,5 @@
-import { ActionFunction, redirect } from 'remix';
-import { getAuthData } from '~/reddit/auth.js';
+import { ActionFunction, json, redirect } from 'remix';
+import { executeWithTokenRefresh, getAuthData } from '~/reddit/auth.js';
 import { getFrontpage, getNextFeed } from '~/reddit/client.js';
 
 export let action: ActionFunction = async ({ request }) => {
@@ -8,20 +8,32 @@ export let action: ActionFunction = async ({ request }) => {
   const { after, subreddit } = body;
   // const count = body.count;
   if (authData?.access_token && !subreddit?.length) {
-    try {
-      const frontpage = await getFrontpage(authData, { after });
-      return frontpage;
-    } catch (error) {
-      return redirect('/');
+    const result = await executeWithTokenRefresh(
+      (authData) => getFrontpage(authData, { after }),
+      request
+    );
+    if (result) {
+      const { error, data, options } = result;
+      if (error) {
+        throw new Error(error);
+      }
+      return json(data, options);
     }
+
+    throw new Error('Error fetching subreddit!');
   }
 
   if (subreddit?.length) {
-    try {
-      const feed = await getNextFeed({ authData, subreddit, after });
-      return feed;
-    } catch (error) {
-      return redirect('/');
+    const result = await executeWithTokenRefresh(
+      (authData) => getNextFeed({ authData, subreddit, after }),
+      request
+    );
+    if (result) {
+      const { error, data, options } = result;
+      if (error) {
+        throw new Error(error);
+      }
+      return json(data, options);
     }
   }
 

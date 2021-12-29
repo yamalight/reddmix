@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { LoaderFunction, MetaFunction, useLoaderData } from 'remix';
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import Comment from '~/components/comment/index.js';
 import Header from '~/components/header.js';
 import Post from '~/components/post/index.js';
-import { generateLoginUrl, getAuthData } from '~/reddit/auth.js';
+import {
+  executeWithTokenRefresh,
+  generateLoginUrl,
+  getAuthData,
+} from '~/reddit/auth.js';
 import { getPost } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
@@ -13,9 +17,20 @@ import { getPost } from '~/reddit/client.js';
 export let loader: LoaderFunction = async ({ request, params }) => {
   const authData = await getAuthData(request);
   const { subreddit, postid, postname } = params;
-  const data = await getPost({ authData, subreddit, postid, postname });
   const loginUrl = authData ? undefined : generateLoginUrl();
-  return { loginUrl, subreddit, ...data };
+  const result = await executeWithTokenRefresh(
+    (authData) => getPost({ authData, subreddit, postid, postname }),
+    request
+  );
+  if (result) {
+    const { error, data, options } = result;
+    if (error) {
+      return { error };
+    }
+    return json({ loginUrl, subreddit, ...data }, options);
+  }
+
+  return { error: 'Error fetching post!' };
 };
 
 // https://remix.run/api/conventions#meta

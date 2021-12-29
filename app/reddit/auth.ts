@@ -61,3 +61,34 @@ export const refreshToken = async (
 
   return newToken;
 };
+
+export const executeWithTokenRefresh = async (
+  fn: (authData: RedditAuthData) => Promise<any>,
+  request: Request
+) => {
+  let authData = await getAuthData(request);
+  if (!authData?.access_token) {
+    return false;
+  }
+
+  try {
+    const frontpage = await fn(authData);
+    return { data: frontpage, options: {} };
+  } catch (error) {
+    if (error.status !== 401) {
+      return { error };
+    }
+
+    // If the access token is invalid, we need to generate a new one.
+    authData = await refreshToken(authData);
+    const frontpage = await fn(authData);
+    return {
+      data: frontpage,
+      options: {
+        headers: {
+          'Set-Cookie': await redditAuth.serialize(authData),
+        },
+      },
+    };
+  }
+};

@@ -40,7 +40,7 @@ export const getSubFeed = async ({
 }: {
   authData?: RedditAuthData;
   subreddit?: string;
-}) => {
+} = {}) => {
   let result;
   if (authData?.access_token) {
     result = await fetch(`https://oauth.reddit.com/r/${subreddit}/.json`, {
@@ -161,7 +161,7 @@ export const getMoreComments = async ({
   authData: RedditAuthData;
   postId: string;
   children: string;
-  sort: string;
+  sort?: string;
 }) => {
   const linkId = `t3_${postId}`; // This is the post id of the original request, the t3_ prefix signifies post
 

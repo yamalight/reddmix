@@ -8,8 +8,11 @@ import {
 } from 'remix';
 import Feed from '~/components/feed.js';
 import Header from '~/components/header.js';
-import { redditAuth } from '~/cookies.js';
-import { generateLoginUrl, getAuthData, refreshToken } from '~/reddit/auth.js';
+import {
+  executeWithTokenRefresh,
+  generateLoginUrl,
+  getAuthData,
+} from '~/reddit/auth.js';
 import { getFrontpage, getSubFeed } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
@@ -17,28 +20,16 @@ import { getFrontpage, getSubFeed } from '~/reddit/client.js';
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
 export let loader: LoaderFunction = async ({ request }) => {
-  let authData = await getAuthData(request);
-  if (authData?.access_token) {
-    try {
-      const frontpage = await getFrontpage(authData);
-      return frontpage;
-    } catch (error) {
-      if (error.status !== 401) {
-        return { error };
-      }
-
-      // If the access token is invalid, we need to generate a new one.
-      authData = await refreshToken(authData);
-      const frontpage = await getFrontpage(authData);
-      return json(frontpage, {
-        headers: {
-          'Set-Cookie': await redditAuth.serialize(authData),
-        },
-      });
+  const result = await executeWithTokenRefresh(getFrontpage, request);
+  if (result) {
+    const { error, data, options } = result;
+    if (error) {
+      return { error };
     }
+    return json(data, options);
   }
 
-  const all = await getSubFeed({ authData });
+  const all = await getSubFeed();
   const loginUrl = generateLoginUrl();
   return { loginUrl, ...all, isAll: true };
 };
@@ -52,20 +43,23 @@ export let meta: MetaFunction = () => {
 };
 
 export let action: ActionFunction = async ({ request }) => {
-  const authData = await getAuthData(request);
+  // const authData = await getAuthData(request);
   const formData = await request.formData();
   const after = formData.get('after');
   const count = formData.get('count');
-  if (authData?.access_token) {
-    try {
-      const frontpage = await getFrontpage(authData, { after, count });
-      return frontpage;
-    } catch (error) {
-      return redirect('/');
+  const result = await executeWithTokenRefresh(
+    (authData) => getFrontpage(authData, { after, count }),
+    request
+  );
+  if (result) {
+    const { error, data, options } = result;
+    if (error) {
+      return { error };
     }
+    return json(data, options);
   }
 
-  return redirect('/');
+  return { error: 'Not logged in' };
 };
 
 // https://remix.run/guides/routing#index-routes

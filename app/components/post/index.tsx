@@ -32,7 +32,7 @@ export default function Post({ post, expanded }) {
 
   return (
     <PostWrapper post={post} expanded={expanded}>
-      {type === 'text' && <TextPost post={post} />}
+      {type === 'text' && <TextPost post={post} expanded={expanded} />}
       {type === 'image' && <ImagePost post={post} />}
       {type === 'gallery' && (
         <ImageGalleryPost post={post} expanded={expanded} />

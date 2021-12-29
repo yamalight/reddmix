@@ -97,7 +97,7 @@ export default function PostWrapper({ post, expanded, children }) {
           </span>
         )}
         {post.whitelist_status === 'promo_adult_nsfw' && (
-          <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-red-800 border-red-800 rounded ml-1 py-1">
+          <span className="text-xs px-2 font-medium bg-red-500 dark:bg-red-900 bg-opacity-10 text-red-900 border-red-500 dark:text-red-100 dark:border-red-800 rounded ml-1 py-1">
             NSFW
           </span>
         )}

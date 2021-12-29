@@ -15,7 +15,7 @@ export default function Markdown({ text }) {
   }, []);
 
   return (
-    <div className="text-lg px-4 mt-2 prose prose-zinc dark:prose-invert max-w-max">
+    <div className="text-base sm:text-lg px-2 sm:px-4 mt-1 sm:mt-2 prose prose-zinc dark:prose-invert w-full sm:max-w-max">
       {Md.current ? (
         <Md.current children={text} remarkPlugins={plugins} />
       ) : (

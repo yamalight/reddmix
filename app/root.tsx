@@ -126,7 +126,7 @@ function Layout({
         <Meta />
         <Links />
       </head>
-      <body className="bg-white dark:bg-gray-900">
+      <body className="bg-white dark:bg-gray-900 touch-pan-y">
         <div className="w-full">{children}</div>
         <ScrollRestoration />
         <Scripts />

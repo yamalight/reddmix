@@ -107,7 +107,9 @@ export default function Comment({ comment, opName, level = 0 }) {
 
   return (
     <div
-      className="flex overflow-hidden w-full max-w-screen-xl p-2 bg-gray-100 dark:bg-gray-700"
+      className={`flex ${
+        level === 0 ? 'w-full' : ''
+      } sm:max-w-screen-xl sm:p-2 bg-gray-100 dark:bg-gray-700`}
       ref={commentRef}
     >
       <button
@@ -123,10 +125,10 @@ export default function Comment({ comment, opName, level = 0 }) {
           className={`w-1 h-full border-l-2 border-opacity-25 dark:border-opacity-40 ${colors[level]} dark:${colorsDark[level]}`}
         />
       </button>
-      <div className="flex flex-col">
-        <div className="flex p-2 items-center">
+      <div className="flex flex-shrink flex-col">
+        <div className="flex flex-wrap p-1 sm:p-2 items-center">
           <span
-            className={`text-sm font-bold mr-2 ${
+            className={`text-sm font-bold mr-1 sm:mr-2 ${
               comment.author === opName
                 ? 'text-indigo-600 dark:text-indigo-400'
                 : 'text-gray-600 dark:text-gray-400'
@@ -168,16 +170,16 @@ export default function Comment({ comment, opName, level = 0 }) {
             </div>
 
             {/* debuggin json  */}
-            {process.env.NODE_ENV === 'development' && (
+            {/* {process.env.NODE_ENV === 'development' && (
               <details className="mt-6 text-neutral-600 dark:text-neutral-200">
                 <summary className="text-sm font-medium">Comment JSON</summary>
                 <pre className="mt-2">
                   <code>{JSON.stringify(comment, null, 2)}</code>
                 </pre>
               </details>
-            )}
+            )} */}
 
-            <div className="pl-8">
+            <div className="pl-1 sm:pl-8 w-full">
               {comment?.replies?.data?.children.map((child) => (
                 <Comment
                   key={child.data.id}

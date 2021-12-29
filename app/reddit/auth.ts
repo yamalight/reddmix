@@ -5,7 +5,7 @@ export const generateLoginUrl = () => {
     process.env.REDDIT_CLIENT_ID
   }&response_type=code&state=${Date.now()}&redirect_uri=${
     process.env.REDDIT_REDIRECT_URI
-  }&duration=permanent&scope=read`;
+  }&duration=permanent&scope=read,identity,vote,save`;
   return loginUrl;
 };
 

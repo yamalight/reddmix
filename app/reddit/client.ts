@@ -166,7 +166,7 @@ export const getMoreComments = async ({
   const linkId = `t3_${postId}`; // This is the post id of the original request, the t3_ prefix signifies post
 
   const result = await fetch(
-    `http://oauth.reddit.com/api/morechildren?link_id=${linkId}&children=${children}&sort=${sort}&api_type=json`,
+    `https://oauth.reddit.com/api/morechildren?link_id=${linkId}&children=${children}&sort=${sort}&api_type=json`,
     {
       method: 'GET',
       headers: {
@@ -187,4 +187,34 @@ export const getMoreComments = async ({
   const allComments = json.json.data?.things?.map((comment) => comment.data);
 
   return allComments;
+};
+
+export const voteItem = async ({
+  authData,
+  itemId,
+  direction = 1,
+}: {
+  authData: RedditAuthData;
+  itemId: string;
+  direction: number;
+}) => {
+  const result = await fetch(`https://oauth.reddit.com/api/vote`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${authData.access_token}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${itemId}&dir=${direction}`,
+  });
+  if (result.status !== 200) {
+    console.error(result);
+    const error = new RedditError('Failed to upvote item');
+    error.status = result.status;
+    throw error;
+  }
+  const json = await result.json();
+  if (json.json?.error) {
+    throw new Error(json.json.error);
+  }
+  return json;
 };

@@ -1,13 +1,52 @@
 import { formatDistanceToNow } from 'date-fns';
 import { decode } from 'html-entities';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { BiDownvote, BiLinkExternal, BiUpvote } from 'react-icons/bi';
 import { Link } from 'remix';
 import Awards from '../awards.js';
 
 export default function PostWrapper({ post, expanded, children }) {
+  const [vote, setVote] = useState(() =>
+    post.likes === true ? 1 : post.likes === false ? -1 : 0
+  );
+  const [votes, setVotes] = useState(() => Number(post.ups));
   const date = useMemo(() => new Date(post.created_utc * 1000), [post]);
   const title = useMemo(() => decode(post.title), [post]);
+
+  const toggleUpvote = () => {
+    // update UI
+    const newVote = vote === 1 ? 0 : 1;
+    setVote(newVote);
+    setVotes(votes + (newVote === 1 ? 1 : -1));
+    // execute request
+    fetch('/api/vote', {
+      method: 'POST',
+      body: JSON.stringify({
+        itemId: post.name,
+        direction: newVote,
+      }),
+    }).catch((err) => {
+      setVote(vote);
+      setVotes(votes);
+    });
+  };
+  const toggleDownvote = () => {
+    // update UI
+    const newVote = vote === -1 ? 0 : -1;
+    setVote(newVote);
+    setVotes(votes + (vote === 1 ? -1 : 0) + (newVote === -1 ? -1 : 1));
+    // execute request
+    fetch('/api/vote', {
+      method: 'POST',
+      body: JSON.stringify({
+        itemId: post.name,
+        direction: newVote,
+      }),
+    }).catch((err) => {
+      setVote(vote);
+      setVotes(votes);
+    });
+  };
 
   return (
     <div
@@ -66,9 +105,19 @@ export default function PostWrapper({ post, expanded, children }) {
       {children}
       <div className="flex p-2 my-2 items-center gap-2 text-gray-800 dark:text-gray-200">
         <div className="flex items-center gap-1">
-          <BiUpvote className="w-6 h-6" />
-          {post.ups}
-          <BiDownvote className="w-6 h-6" />
+          <BiUpvote
+            className={`w-6 h-6 cursor-pointer ${
+              vote === 1 ? 'text-orange-600' : ''
+            }`}
+            onClick={toggleUpvote}
+          />
+          {votes}
+          <BiDownvote
+            className={`w-6 h-6 cursor-pointer ${
+              vote === -1 ? 'text-orange-600' : ''
+            }`}
+            onClick={toggleDownvote}
+          />
         </div>
         <Link to={post.permalink}>{post.num_comments} comments</Link>
       </div>

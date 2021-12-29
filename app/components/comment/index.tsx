@@ -26,7 +26,7 @@ const colors = [
   'border-indigo-400',
 ];
 const colorsDark = [
-  'border-gray-700',
+  'border-gray-800',
   'border-purple-700',
   'border-red-700',
   'border-yellow-700',
@@ -68,17 +68,17 @@ export default function Comment({ comment, level = 0 }) {
 
   return (
     <div
-      className="flex overflow-hidden w-full max-w-screen-xl"
+      className="flex overflow-hidden w-full max-w-screen-xl p-2 bg-gray-100 dark:bg-gray-700"
       ref={commentRef}
     >
       <button
-        className="flex flex-col w-4 items-center font-bold text-gray-800 dark:text-gray-300"
+        className="flex flex-col w-4 pt-2 items-center font-bold text-gray-800 dark:text-gray-300"
         onClick={toggleCollapsed}
       >
         {expanded ? (
           <RiArrowDownSFill className="w-6 h-6" />
         ) : (
-          <RiArrowRightSFill className="w-6 h-6" />
+          <RiArrowRightSFill className="w-6 h-6 min-h-[1.5rem]" />
         )}
         <div
           className={`w-1 h-full border-l-2 border-opacity-25 dark:border-opacity-40 ${colors[level]} dark:${colorsDark[level]}`}
@@ -114,10 +114,8 @@ export default function Comment({ comment, level = 0 }) {
 
             {/* debuggin json  */}
             {process.env.NODE_ENV === 'development' && (
-              <details className="mt-6">
-                <summary className="text-sm font-medium text-neutral-600">
-                  Comment JSON
-                </summary>
+              <details className="mt-6 text-neutral-600 dark:text-neutral-200">
+                <summary className="text-sm font-medium">Comment JSON</summary>
                 <pre className="mt-2">
                   <code>{JSON.stringify(comment, null, 2)}</code>
                 </pre>

@@ -1,6 +1,6 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
+import MainContainer from '~/components/container.js';
 import Feed from '~/components/feed.js';
-import Header from '~/components/header.js';
 import {
   executeWithTokenRefresh,
   generateLoginUrl,
@@ -43,16 +43,13 @@ export default function Index() {
   const { loginUrl, posts, after } = useLoaderData();
 
   return (
-    <>
-      <Header loginUrl={loginUrl} />
-      <main className="w-full pt-16">
-        {!posts && (
-          <div className="text-center text-2xl font-bold">
-            Could not fetch all reddit posts.
-          </div>
-        )}
-        <Feed initialPosts={posts} initialAfter={after} subreddit="all" />
-      </main>
-    </>
+    <MainContainer loginUrl={loginUrl}>
+      {!posts && (
+        <div className="text-center text-2xl font-bold">
+          Could not fetch all reddit posts.
+        </div>
+      )}
+      <Feed initialPosts={posts} initialAfter={after} subreddit="all" />
+    </MainContainer>
   );
 }

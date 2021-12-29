@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix';
 import Comment from '~/components/comment/index.js';
-import Header from '~/components/header.js';
+import MainContainer from '~/components/container.js';
 import Post from '~/components/post/index.js';
 import {
   executeWithTokenRefresh,
@@ -86,28 +86,25 @@ export default function PostPage() {
   };
 
   return (
-    <>
-      <Header loginUrl={loginUrl} subreddit={subreddit} />
-      <main className="w-full pt-16">
-        <div className="flex justify-center w-full">
-          {!post && <div className="text-center">Loading...</div>}
-          {post && <Post post={post} expanded />}
-        </div>
-        <div className="flex flex-col items-center my-8 gap-4 w-full">
-          {comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} opName={opName} />
-          ))}
+    <MainContainer loginUrl={loginUrl} subreddit={subreddit}>
+      <div className="flex justify-center w-full">
+        {!post && <div className="text-center">Loading...</div>}
+        {post && <Post post={post} expanded />}
+      </div>
+      <div className="flex flex-col items-center my-8 gap-4 w-full">
+        {comments.map((comment) => (
+          <Comment key={comment.id} comment={comment} opName={opName} />
+        ))}
 
-          {!loginUrl && more.length > 0 && !loading && (
-            <button
-              className="p-2 px-4 bg-gray-100 rounded my-4"
-              onClick={loadMore}
-            >
-              Load more...
-            </button>
-          )}
-        </div>
-      </main>
-    </>
+        {!loginUrl && more.length > 0 && !loading && (
+          <button
+            className="p-2 px-4 bg-gray-100 rounded my-4"
+            onClick={loadMore}
+          >
+            Load more...
+          </button>
+        )}
+      </div>
+    </MainContainer>
   );
 }

@@ -9,7 +9,7 @@ export default function Feed({
 }: {
   initialPosts: Array<any>;
   initialAfter: string;
-  subreddit: string;
+  subreddit?: string;
 }) {
   const loadMoreRef = useRef();
   const existingPostsRef = useRef<{ [postId: string]: boolean }>({});

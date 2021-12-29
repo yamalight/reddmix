@@ -3,16 +3,11 @@ import {
   json,
   LoaderFunction,
   MetaFunction,
-  redirect,
   useLoaderData,
 } from 'remix';
+import MainContainer from '~/components/container.js';
 import Feed from '~/components/feed.js';
-import Header from '~/components/header.js';
-import {
-  executeWithTokenRefresh,
-  generateLoginUrl,
-  getAuthData,
-} from '~/reddit/auth.js';
+import { executeWithTokenRefresh, generateLoginUrl } from '~/reddit/auth.js';
 import { getFrontpage, getSubFeed } from '~/reddit/client.js';
 
 // Loaders provide data to components and are only ever called on the server, so
@@ -67,18 +62,15 @@ export default function Index() {
   const { loginUrl, posts, after, isAll } = useLoaderData();
 
   return (
-    <>
-      <Header loginUrl={loginUrl} />
-      <main className="w-full pt-16">
-        {isAll && (
-          <div className="text-center text-xl font-bold dark:text-gray-400">
-            Showing /r/all.
-            <br />
-            Login to view your frontpage posts.
-          </div>
-        )}
-        <Feed initialPosts={posts} initialAfter={after} />
-      </main>
-    </>
+    <MainContainer loginUrl={loginUrl}>
+      {isAll && (
+        <div className="text-center text-xl font-bold dark:text-gray-400">
+          Showing /r/all.
+          <br />
+          Login to view your frontpage posts.
+        </div>
+      )}
+      <Feed initialPosts={posts} initialAfter={after} />
+    </MainContainer>
   );
 }

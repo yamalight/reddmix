@@ -53,7 +53,7 @@ export const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleDark}
-      className="flex title-font font-medium items-center text-gray-900 dark:text-gray-100 mx-2"
+      className="flex title-font font-medium items-center text-gray-900 dark:text-gray-100 m-2"
     >
       {isDark ? <MdLightMode /> : <MdDarkMode />}
     </button>

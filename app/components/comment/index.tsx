@@ -49,6 +49,10 @@ const colorsDark = [
 export default function Comment({ comment, level = 0 }) {
   const commentRef = useRef<HTMLElement>();
   const [expanded, setExpanded] = useState(true);
+  const [vote, setVote] = useState(() =>
+    comment.likes === true ? 1 : comment.likes === false ? -1 : 0
+  );
+  const [votes, setVotes] = useState(() => Number(comment.ups));
   const date = useMemo(
     () => (comment.created_utc ? new Date(comment.created_utc * 1000) : -1),
     [comment]
@@ -60,6 +64,41 @@ export default function Comment({ comment, level = 0 }) {
     if (expanded && commentRef.current && level === 0) {
       commentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const toggleUpvote = () => {
+    // update UI
+    const newVote = vote === 1 ? 0 : 1;
+    setVote(newVote);
+    setVotes(votes + (newVote === 1 ? 1 : -1));
+    // execute request
+    fetch('/api/vote', {
+      method: 'POST',
+      body: JSON.stringify({
+        itemId: comment.name,
+        direction: newVote,
+      }),
+    }).catch((err) => {
+      setVote(vote);
+      setVotes(votes);
+    });
+  };
+  const toggleDownvote = () => {
+    // update UI
+    const newVote = vote === -1 ? 0 : -1;
+    setVote(newVote);
+    setVotes(votes + (vote === 1 ? -1 : 0) + (newVote === -1 ? -1 : 1));
+    // execute request
+    fetch('/api/vote', {
+      method: 'POST',
+      body: JSON.stringify({
+        itemId: comment.name,
+        direction: newVote,
+      }),
+    }).catch((err) => {
+      setVote(vote);
+      setVotes(votes);
+    });
   };
 
   if (!comment.body?.length) {
@@ -106,9 +145,19 @@ export default function Comment({ comment, level = 0 }) {
             <CommentText comment={comment} />
             <div className="flex p-2 my-2 items-center gap-2 text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-1">
-                <BiUpvote className="w-5 h-5" />
-                {comment.ups}
-                <BiDownvote className="w-5 h-5" />
+                <BiUpvote
+                  className={`w-5 h-5 cursor-pointer ${
+                    vote === 1 ? 'text-orange-600' : ''
+                  }`}
+                  onClick={toggleUpvote}
+                />
+                {votes}
+                <BiDownvote
+                  className={`w-5 h-5 cursor-pointer ${
+                    vote === -1 ? 'text-orange-600' : ''
+                  }`}
+                  onClick={toggleDownvote}
+                />
               </div>
             </div>
 

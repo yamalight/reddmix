@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { retextRedditPreviewToImages } from './images.js';
 
 export default function Markdown({ text }) {
   const Md = useRef();
@@ -10,7 +11,10 @@ export default function Markdown({ text }) {
       Md.current = (await import('react-markdown')).default;
       // load and set markdown plugins
       const remarkGfm = (await import('remark-gfm')).default;
-      setPlugins([remarkGfm]);
+      // load and set retext plugins
+      const retextImage = await retextRedditPreviewToImages();
+      // set markdown plugins
+      setPlugins([remarkGfm, retextImage]);
     })();
   }, []);
 

@@ -1,6 +1,6 @@
 import { decode } from 'html-entities';
 import { useMemo } from 'react';
-import Markdown from '../markdown.js';
+import Markdown from '../markdown/index';
 
 export default function TextPost({ post, expanded }) {
   const text = useMemo(() => decode(post.selftext), [post]);

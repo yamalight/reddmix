@@ -56,12 +56,23 @@ export const getVideo = (post) => {
 
   // try to get embed video
   const embed = actualPost?.media?.oembed?.html;
-  const cleanEmbed = decode(embed);
-  const styledEmbed = cleanEmbed.includes('class=')
-    ? cleanEmbed.replace('class="', 'class="w-full h-full min-h-[70vh] ')
-    : cleanEmbed.replace(
-        '<iframe',
-        '<iframe class="w-full h-full min-h-[70vh] aspect-video" '
-      );
-  return { embed: styledEmbed };
+  if (embed) {
+    const cleanEmbed = decode(embed);
+    const styledEmbed = cleanEmbed.includes('class=')
+      ? cleanEmbed.replace('class="', 'class="w-full h-full min-h-[70vh] ')
+      : cleanEmbed.replace(
+          '<iframe',
+          '<iframe class="w-full h-full min-h-[70vh] aspect-video" '
+        );
+    return { embed: styledEmbed };
+  }
+
+  // try to get youtube link
+  const youtubeLink = actualPost?.url_overridden_by_dest;
+  if (youtubeLink) {
+    const youtubeId = youtubeLink.match(/v=([^&]*)/);
+    const youtubeIdString = youtubeId?.[1];
+    const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://www.youtube.com/embed/${youtubeIdString}?feature=oembed&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    return { embed };
+  }
 };

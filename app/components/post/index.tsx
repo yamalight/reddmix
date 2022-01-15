@@ -25,6 +25,11 @@ export default function Post({ post, expanded }) {
       return 'gallery';
     }
     if (actualPost.post_hint === 'link') {
+      // handle links to youtube as video posts
+      if (actualPost?.url_overridden_by_dest.includes('youtube.com')) {
+        return 'video';
+      }
+      // otherwise - treat as link
       return 'link';
     }
     // TODO: handle poll

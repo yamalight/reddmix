@@ -10,6 +10,12 @@ export default function VideoPost({ post }) {
     [post]
   );
 
+  const handleVolumeChange = (e) => {
+    const newVolume = Math.round(e.target.volume * 100) / 100;
+    // save to local storage
+    localStorage.setItem('reddmix-volume', newVolume.toString());
+  };
+
   useEffect(() => {
     if (!playerRef.current || !video) {
       return;
@@ -22,6 +28,7 @@ export default function VideoPost({ post }) {
           abrEwmaDefaultEstimate: 100000,
           autoStartLoad: true,
           startLevel: -1,
+          startPosition: 0,
         });
         hlsRef.current.attachMedia(playerRef.current);
       }
@@ -29,6 +36,13 @@ export default function VideoPost({ post }) {
       hlsRef.current.loadSource(video);
     } else if (fallback) {
       playerRef.current.src = fallback;
+    }
+
+    // restore volume from localStorage (if available)
+    const storedVolume = localStorage.getItem('reddmix-volume');
+    if (storedVolume) {
+      playerRef.current.volume = parseFloat(storedVolume);
+      playerRef.current.muted = false;
     }
   }, [playerRef, video, fallback]);
 
@@ -39,6 +53,7 @@ export default function VideoPost({ post }) {
           <video
             ref={playerRef}
             poster={poster}
+            onVolumeChange={handleVolumeChange}
             muted
             preload="auto"
             controls

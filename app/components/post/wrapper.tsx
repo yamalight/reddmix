@@ -86,7 +86,7 @@ export default function PostWrapper({ post, expanded, children }) {
           )}
         </p>
         <a
-          href={`https://reddit.com/${post.permalink}`}
+          href={`https://www.reddit.com${post.permalink}`}
           className="ml-1 px-2 text-gray-900 dark:text-gray-200"
         >
           <BiLinkExternal />

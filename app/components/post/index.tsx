@@ -8,19 +8,23 @@ import PostWrapper from './wrapper.js';
 
 export default function Post({ post, expanded }) {
   const type = useMemo(() => {
-    if (post.post_hint === 'self' || post.is_self) {
+    // handle cross-posts
+    const actualPost = post.crosspost_parent_list?.[0] ?? post;
+
+    // detect type
+    if (actualPost.post_hint === 'self' || actualPost.is_self) {
       return 'text';
     }
-    if (post.post_hint === 'image') {
+    if (actualPost.post_hint === 'image') {
       return 'image';
     }
-    if (post.post_hint?.includes?.('video')) {
+    if (actualPost.post_hint?.includes?.('video')) {
       return 'video';
     }
-    if (post.gallery_data?.items?.length > 0) {
+    if (actualPost.gallery_data?.items?.length > 0) {
       return 'gallery';
     }
-    if (post.post_hint === 'link') {
+    if (actualPost.post_hint === 'link') {
       return 'link';
     }
     // TODO: handle poll

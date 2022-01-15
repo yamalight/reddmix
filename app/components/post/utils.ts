@@ -1,7 +1,10 @@
 import { decode } from 'html-entities';
 
 export const getImage = (post) => {
-  const images = post.preview?.images?.[0];
+  // handle cross-posts
+  const actualPost = post.crosspost_parent_list?.[0] ?? post;
+  // handle images
+  const images = actualPost.preview?.images?.[0];
   // get source image
   const sourceImage = images?.source?.url;
   const source = decode(sourceImage);
@@ -16,13 +19,16 @@ export const getImage = (post) => {
 };
 
 export const getGallery = (post) => {
-  const items = post?.gallery_data?.items;
+  // handle cross-posts
+  const actualPost = post.crosspost_parent_list?.[0] ?? post;
+  // handle gallery
+  const items = actualPost?.gallery_data?.items;
   if (!items) {
     return [];
   }
 
   return items.map(({ media_id, id }) => {
-    const metadata = post.media_metadata[media_id];
+    const metadata = actualPost.media_metadata[media_id];
     const sourceImage = metadata?.s?.u;
     return {
       id,
@@ -32,12 +38,15 @@ export const getGallery = (post) => {
 };
 
 export const getVideo = (post) => {
-  const poster = post?.preview?.images?.[0]?.source?.url;
+  // handle cross-posts
+  const actualPost = post.crosspost_parent_list?.[0] ?? post;
+  // get video
+  const poster = actualPost?.preview?.images?.[0]?.source?.url;
 
   // try to get reddit video
-  const video = post?.media?.reddit_video?.hls_url;
+  const video = actualPost?.media?.reddit_video?.hls_url;
   if (video) {
-    const fallback = post?.media?.reddit_video?.fallback_url;
+    const fallback = actualPost?.media?.reddit_video?.fallback_url;
     return {
       poster: decode(poster),
       fallback: decode(fallback),
@@ -46,7 +55,7 @@ export const getVideo = (post) => {
   }
 
   // try to get embed video
-  const embed = post?.media?.oembed?.html;
+  const embed = actualPost?.media?.oembed?.html;
   const cleanEmbed = decode(embed);
   const styledEmbed = cleanEmbed.includes('class=')
     ? cleanEmbed.replace('class="', 'class="w-full h-full min-h-[70vh] ')

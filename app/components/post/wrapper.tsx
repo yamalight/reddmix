@@ -12,6 +12,13 @@ export default function PostWrapper({ post, expanded, children }) {
   const [votes, setVotes] = useState(() => Number(post.ups));
   const date = useMemo(() => new Date(post.created_utc * 1000), [post]);
   const title = useMemo(() => decode(post.title), [post]);
+  const flair = useMemo(
+    () =>
+      post.link_flair_text?.length > 0
+        ? decode(post.link_flair_text)
+        : undefined,
+    [post]
+  );
 
   const toggleUpvote = () => {
     // update UI
@@ -91,9 +98,9 @@ export default function PostWrapper({ post, expanded, children }) {
         >
           <BiLinkExternal />
         </a>
-        {post.link_flair_text?.length > 0 && (
+        {flair && (
           <span className="text-xs px-2 font-medium bg-gray-500 bg-opacity-10 text-gray-800 dark:text-gray-200 rounded ml-1 py-1">
-            {post.link_flair_text}
+            {flair}
           </span>
         )}
         {post.whitelist_status === 'promo_adult_nsfw' && (

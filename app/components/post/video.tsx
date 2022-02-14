@@ -17,7 +17,7 @@ export default function VideoPost({ post }) {
   };
 
   useEffect(() => {
-    if (!playerRef.current || !video) {
+    if (!playerRef.current || (!video && !fallback)) {
       return;
     }
 
@@ -33,7 +33,11 @@ export default function VideoPost({ post }) {
         hlsRef.current.attachMedia(playerRef.current);
       }
       // load source
-      hlsRef.current.loadSource(video);
+      if (video) {
+        hlsRef.current.loadSource(video);
+      } else if (fallback) {
+        playerRef.current.src = fallback;
+      }
     } else if (fallback) {
       playerRef.current.src = fallback;
     }
@@ -48,7 +52,7 @@ export default function VideoPost({ post }) {
 
   return (
     <>
-      {video && (
+      {(video || fallback) && (
         <div className="flex items-center justify-center max-h-[70vh] h-[70vh]">
           <video
             ref={playerRef}

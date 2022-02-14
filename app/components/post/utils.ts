@@ -67,8 +67,15 @@ export const getVideo = (post) => {
     return { embed: styledEmbed };
   }
 
-  // try to get youtube link
+  // try to get video from post link
   const postLink = actualPost?.url_overridden_by_dest;
+  if (postLink && postLink.endsWith('.mp4')) {
+    return {
+      fallback: postLink,
+    };
+  }
+
+  // try to get youtube video
   if (postLink && postLink.includes('youtube.com')) {
     const youtubeId = postLink.match(/v=([^&]*)/);
     const youtubeIdString = youtubeId?.[1];

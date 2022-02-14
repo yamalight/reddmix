@@ -27,12 +27,20 @@ export default function Post({ post, expanded }) {
     if (actualPost.gallery_data?.items?.length > 0) {
       return 'gallery';
     }
-    if (actualPost.post_hint === 'link') {
+    if (
+      actualPost.post_hint === 'link' ||
+      actualPost?.url_overridden_by_dest !== undefined
+    ) {
       // handle links to youtube as video posts
       if (actualPost?.url_overridden_by_dest.includes('youtube.com')) {
         return 'video';
       }
+      // handle links to gfycat as video posts
       if (actualPost?.url_overridden_by_dest.includes('gfycat.com')) {
+        return 'video';
+      }
+      // handle URLs that end with .mp4 as video posts
+      if (actualPost?.url_overridden_by_dest.endsWith('.mp4')) {
         return 'video';
       }
       // otherwise - treat as link

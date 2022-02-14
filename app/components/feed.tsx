@@ -39,10 +39,12 @@ export default function Feed({
   const [posts, setPosts] = useState<any>([]);
   const [after, setAfter] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [overscan, setOverscan] = useState(900);
 
   useEffect(() => {
     setPosts(initialPosts);
     setAfter(initialAfter);
+    setOverscan(window.innerHeight * 2);
   }, [initialPosts, initialAfter]);
 
   const loadMore = async () => {
@@ -72,6 +74,7 @@ export default function Feed({
         <div className="flex flex-col h-full">
           <Virtuoso
             totalCount={posts.length}
+            overscan={overscan}
             className="w-full h-full"
             endReached={() => loadMore(true)}
             itemContent={(index) => {

@@ -95,3 +95,9 @@ export const getVideo = (post) => {
     return { embed };
   }
 };
+
+export const getText = (post) => {
+  // handle cross-posts
+  const actualPost = post.crosspost_parent_list?.[0] ?? post;
+  return decode(actualPost.selftext);
+};

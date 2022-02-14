@@ -1,6 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import { Virtuoso } from 'react-virtuoso';
 import { useIntersectionObserver } from '~/hooks/useIntersectionObserver.js';
 import Post from './post/index.js';
+
+const Item = forwardRef(({ children, ...props }, ref) => {
+  return (
+    <div className="flex flex-col w-full max-w-screen-xl" {...props} ref={ref}>
+      {children}
+    </div>
+  );
+});
+
+const List = forwardRef((props, ref) => {
+  return <div className="flex flex-col items-center" {...props} ref={ref} />;
+});
+
+const Footer = () => {
+  return (
+    <div className="flex p-4 justify-center text-gray-900 dark:text-gray-100">
+      Loading...
+    </div>
+  );
+};
 
 export default function Feed({
   initialPosts,
@@ -50,26 +71,20 @@ export default function Feed({
   return (
     <>
       {posts && (
-        <div className="flex flex-col p-4 gap-8 items-center">
-          {posts.map((post) => {
-            // mark current post as in-feed (used during pagination)
-            existingPostsRef.current[post.id] = true;
-            // return post render
-            return <Post key={post.id} post={post} />;
-          })}
-          {loading && (
-            <div className="text-gray-900 dark:text-gray-100">Loading..</div>
-          )}
-          {!loading && after && (
-            <button
-              ref={loadMoreRef}
-              type="submit"
-              onClick={() => loadMore(true)}
-              className="text-gray-900 dark:text-gray-100"
-            >
-              Load more
-            </button>
-          )}
+        <div className="flex flex-col h-full">
+          <Virtuoso
+            totalCount={posts.length}
+            className="w-full h-full"
+            endReached={() => loadMore(true)}
+            itemContent={(index) => {
+              const post = posts[index];
+              // mark current post as in-feed (used during pagination)
+              existingPostsRef.current[post.id] = true;
+              // return post render
+              return <Post post={post} />;
+            }}
+            components={{ Item, List, Footer }}
+          />
         </div>
       )}
     </>

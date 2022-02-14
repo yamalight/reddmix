@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import ImageGalleryPost from './gallery.js';
 import ImagePost from './image.js';
 import LinkPost from './link.js';
@@ -16,7 +16,7 @@ const isImage = (post) => {
   return false;
 };
 
-export default function Post({ post, expanded }) {
+function Post({ post, expanded }) {
   const type = useMemo(() => {
     // handle cross-posts
     const actualPost = post.crosspost_parent_list?.[0] ?? post;
@@ -75,3 +75,5 @@ export default function Post({ post, expanded }) {
     </PostWrapper>
   );
 }
+
+export default memo(Post, (prev, next) => prev.post.name === next.post.name);

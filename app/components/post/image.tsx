@@ -9,7 +9,7 @@ export default function ImagePost({ post }) {
   }
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center">
+    <div className="flex flex-shrink-0 items-center min-h-[60vh] justify-center">
       {!mp4 && (
         <img
           className="object-contain max-h-[80vh]"

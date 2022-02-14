@@ -1,11 +1,14 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { useIntersectionObserver } from '~/hooks/useIntersectionObserver.js';
 import Post from './post/index.js';
 
 const Item = forwardRef(({ children, ...props }, ref) => {
   return (
-    <div className="flex flex-col w-full max-w-screen-xl" {...props} ref={ref}>
+    <div
+      className="flex flex-col w-full max-w-screen-xl py-2"
+      {...props}
+      ref={ref}
+    >
       {children}
     </div>
   );
@@ -32,7 +35,6 @@ export default function Feed({
   initialAfter: string;
   subreddit?: string;
 }) {
-  const loadMoreRef = useRef();
   const existingPostsRef = useRef<{ [postId: string]: boolean }>({});
   const [posts, setPosts] = useState<any>([]);
   const [after, setAfter] = useState<string | null>(null);
@@ -43,8 +45,8 @@ export default function Feed({
     setAfter(initialAfter);
   }, [initialPosts, initialAfter]);
 
-  const loadMore = async (isIntersecting: boolean) => {
-    if (!isIntersecting || loading) {
+  const loadMore = async () => {
+    if (loading) {
       return;
     }
 
@@ -64,10 +66,6 @@ export default function Feed({
     setLoading(false);
   };
 
-  useIntersectionObserver(loadMoreRef, loadMore, {
-    rootMargin: '0px',
-  });
-
   return (
     <>
       {posts && (
@@ -83,7 +81,7 @@ export default function Feed({
               // return post render
               return <Post post={post} />;
             }}
-            components={{ Item, List, Footer }}
+            components={{ List, Item, Footer }}
           />
         </div>
       )}

@@ -6,6 +6,16 @@ import TextPost from './text.js';
 import VideoPost from './video.js';
 import PostWrapper from './wrapper.js';
 
+const isImage = (post) => {
+  if (post.post_hint === 'image') {
+    return true;
+  }
+  if (post.url_overridden_by_dest?.match(/\.(jpg|jpeg|png|gif|bmp|svg)$/)) {
+    return true;
+  }
+  return false;
+};
+
 export default function Post({ post, expanded }) {
   const type = useMemo(() => {
     // handle cross-posts
@@ -15,7 +25,7 @@ export default function Post({ post, expanded }) {
     if (actualPost.post_hint === 'self' || actualPost.is_self) {
       return 'text';
     }
-    if (actualPost.post_hint === 'image') {
+    if (isImage(actualPost)) {
       return 'image';
     }
     if (

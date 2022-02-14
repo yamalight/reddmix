@@ -7,7 +7,11 @@ export const getImage = (post) => {
   const images = actualPost.preview?.images?.[0];
   // get source image
   const sourceImage = images?.source?.url;
-  const source = decode(sourceImage);
+  let source = decode(sourceImage);
+  // if source is not set - try to get from URL
+  if (!source) {
+    source = actualPost.url_overridden_by_dest;
+  }
   // try to get gif image
   const gifImage = images?.variants?.gif?.source?.url;
   const gif = decode(gifImage);

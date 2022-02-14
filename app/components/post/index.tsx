@@ -18,7 +18,10 @@ export default function Post({ post, expanded }) {
     if (actualPost.post_hint === 'image') {
       return 'image';
     }
-    if (actualPost.post_hint?.includes?.('video')) {
+    if (
+      actualPost.post_hint?.includes?.('video') ||
+      actualPost.media?.reddit_video !== undefined
+    ) {
       return 'video';
     }
     if (actualPost.gallery_data?.items?.length > 0) {

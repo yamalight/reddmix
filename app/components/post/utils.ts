@@ -68,11 +68,19 @@ export const getVideo = (post) => {
   }
 
   // try to get youtube link
-  const youtubeLink = actualPost?.url_overridden_by_dest;
-  if (youtubeLink) {
-    const youtubeId = youtubeLink.match(/v=([^&]*)/);
+  const postLink = actualPost?.url_overridden_by_dest;
+  if (postLink && postLink.includes('youtube.com')) {
+    const youtubeId = postLink.match(/v=([^&]*)/);
     const youtubeIdString = youtubeId?.[1];
     const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://www.youtube.com/embed/${youtubeIdString}?feature=oembed&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    return { embed };
+  }
+
+  // try to get gfycat embed
+  if (postLink && postLink.includes('gfycat.com')) {
+    const gfycatId = postLink.match(/gfycat.com\/([^&]*)/);
+    const gfycatIdString = gfycatId?.[1];
+    const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://gfycat.com/ifr/${gfycatIdString}" frameborder="0" allowfullscreen></iframe>`;
     return { embed };
   }
 };

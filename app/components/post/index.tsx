@@ -29,6 +29,9 @@ export default function Post({ post, expanded }) {
       if (actualPost?.url_overridden_by_dest.includes('youtube.com')) {
         return 'video';
       }
+      if (actualPost?.url_overridden_by_dest.includes('gfycat.com')) {
+        return 'video';
+      }
       // otherwise - treat as link
       return 'link';
     }

@@ -68,12 +68,14 @@ export const executeWithTokenRefresh = async (
 ) => {
   let authData = await getAuthData(request);
   if (!authData?.access_token) {
-    return false;
+    // execute without auth
+    const data = await fn(authData);
+    return { data, options: {} };
   }
 
   try {
-    const frontpage = await fn(authData);
-    return { data: frontpage, options: {} };
+    const data = await fn(authData);
+    return { data, options: {} };
   } catch (error) {
     if (error.status !== 401) {
       return { error };

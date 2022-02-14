@@ -53,7 +53,7 @@ export default function PostPage() {
     comments: baseComments,
     more: baseMore,
   } = useLoaderData();
-  const opName = useMemo(() => post.author, [post]);
+  const opName = useMemo(() => post?.author, [post]);
 
   useEffect(() => {
     if (comments.length) {
@@ -92,7 +92,7 @@ export default function PostPage() {
         {post && <Post post={post} expanded />}
       </div>
       <div className="flex flex-col items-center my-4 sm:my-8 gap-2 sm:gap-4 w-full">
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <Comment key={comment.id} comment={comment} opName={opName} />
         ))}
 

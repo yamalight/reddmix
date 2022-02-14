@@ -119,7 +119,7 @@ export const getPost = async ({
 
   if (authData?.access_token) {
     result = await fetch(
-      `https://oauth.reddit.com/r/${subreddit}/comments/${postid}/${postname}/.json?sot=${sort}`,
+      `https://oauth.reddit.com/r/${subreddit}/comments/${postid}/${postname}/.json?sort=${sort}`,
       {
         headers: {
           Authorization: `Bearer ${authData.access_token}`,
@@ -128,7 +128,7 @@ export const getPost = async ({
     );
   } else {
     result = await fetch(
-      `https://www.reddit.com/r/${subreddit}/comments/${postid}/${postname}/.json?sot=${sort}`
+      `https://www.reddit.com/r/${subreddit}/comments/${postid}/${postname}/.json?sort=${sort}`
     );
   }
 

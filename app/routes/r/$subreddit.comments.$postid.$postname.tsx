@@ -20,7 +20,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const loginUrl = authData ? undefined : generateLoginUrl();
   const result = await executeWithTokenRefresh(
     (authData) => getPost({ authData, subreddit, postid, postname }),
-    request
+    request,
+    { allowUnauthenticated: true }
   );
   if (result) {
     const { error, data, options } = result;

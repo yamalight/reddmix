@@ -63,14 +63,17 @@ export const refreshToken = async (
 };
 
 export const executeWithTokenRefresh = async (
-  fn: (authData: RedditAuthData) => Promise<any>,
-  request: Request
+  fn: (authData: RedditAuthData | undefined) => Promise<any>,
+  request: Request,
+  { allowUnauthenticated = false } = {}
 ) => {
   let authData = await getAuthData(request);
   if (!authData?.access_token) {
-    // execute without auth
-    const data = await fn(authData);
-    return { data, options: {} };
+    if (allowUnauthenticated) {
+      const data = await fn(undefined);
+      return { data, options: {} };
+    }
+    return false;
   }
 
   try {

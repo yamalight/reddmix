@@ -17,7 +17,8 @@ export let loader: LoaderFunction = async ({ request }) => {
   const loginUrl = authData ? undefined : generateLoginUrl();
   const result = await executeWithTokenRefresh(
     (authData) => getSubFeed({ authData }),
-    request
+    request,
+    { allowUnauthenticated: true }
   );
   if (result) {
     const { error, data, options } = result;

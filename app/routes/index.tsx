@@ -44,7 +44,8 @@ export let action: ActionFunction = async ({ request }) => {
   const count = formData.get('count');
   const result = await executeWithTokenRefresh(
     (authData) => getFrontpage(authData, { after, count }),
-    request
+    request,
+    { allowUnauthenticated: true }
   );
   if (result) {
     const { error, data, options } = result;

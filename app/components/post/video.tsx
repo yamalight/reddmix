@@ -35,6 +35,7 @@ export default function VideoPost({ post }) {
       // load source
       if (video) {
         hlsRef.current.loadSource(video);
+        hlsRef.current.config.startPosition = 0;
       } else if (fallback) {
         playerRef.current.src = fallback;
       }
@@ -48,6 +49,15 @@ export default function VideoPost({ post }) {
       playerRef.current.volume = parseFloat(storedVolume);
       playerRef.current.muted = false;
     }
+
+    return () => {
+      // reset player
+      if (playerRef.current?.src) {
+        playerRef.current.src = '';
+      }
+      // destroy hls instance
+      hlsRef.current?.destroy();
+    };
   }, [playerRef, video, fallback]);
 
   return (

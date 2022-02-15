@@ -28,14 +28,21 @@ export default function VideoPost({ post }) {
           abrEwmaDefaultEstimate: 100000,
           autoStartLoad: true,
           startLevel: -1,
-          startPosition: 0,
+          lowLatencyMode: true,
+          enableWorker: true,
+          // startPosition: 0,
         });
         hlsRef.current.attachMedia(playerRef.current);
+        // handle buffer stall error and re-start loading when it happens
+        hlsRef.current.on(Hls.Events.ERROR, (_event, err) => {
+          if (err.details === 'bufferStalledError') {
+            hlsRef.current?.startLoad();
+          }
+        });
       }
       // load source
       if (video) {
         hlsRef.current.loadSource(video);
-        hlsRef.current.config.startPosition = 0;
       } else if (fallback) {
         playerRef.current.src = fallback;
       }
@@ -57,6 +64,7 @@ export default function VideoPost({ post }) {
       }
       // destroy hls instance
       hlsRef.current?.destroy();
+      hlsRef.current = null;
     };
   }, [playerRef, video, fallback]);
 

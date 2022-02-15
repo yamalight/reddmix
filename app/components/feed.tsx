@@ -44,7 +44,7 @@ export default function Feed({
   useEffect(() => {
     setPosts(initialPosts);
     setAfter(initialAfter);
-    setOverscan(window.innerHeight * 2);
+    setOverscan(window.innerHeight);
   }, [initialPosts, initialAfter]);
 
   const loadMore = async () => {

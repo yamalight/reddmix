@@ -1,5 +1,8 @@
 import { decode } from 'html-entities';
 
+const imageRegex = /\.(jpg|jpeg|png|gif|bmp|svg)$/;
+const videoRegex = /\.(gifv|mp4|webm)$/;
+
 export const getImage = (post) => {
   // handle cross-posts
   const actualPost = post.crosspost_parent_list?.[0] ?? post;
@@ -71,13 +74,8 @@ export const getVideo = (post) => {
     return { embed: styledEmbed };
   }
 
-  // try to get video from post link
-  const postLink = actualPost?.url_overridden_by_dest;
-  if (postLink && postLink.endsWith('.mp4')) {
-    return {
-      fallback: postLink,
-    };
-  }
+  // get post link
+  let postLink = actualPost?.url_overridden_by_dest;
 
   // try to get youtube video
   if (postLink && postLink.includes('youtube.com')) {
@@ -94,10 +92,61 @@ export const getVideo = (post) => {
     const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://gfycat.com/ifr/${gfycatIdString}" frameborder="0" allowfullscreen></iframe>`;
     return { embed };
   }
+
+  if (postLink && postLink.includes('imgur.com')) {
+    // replace main domain with i.imgur for direct access to resources
+    if (!postLink.includes('i.imgur.com')) {
+      postLink = postLink.replace('imgur.com', 'i.imgur.com');
+    }
+    // replace gifv with mp4 for better playback
+    postLink = postLink.replace('.gifv', '.mp4');
+    return {
+      fallback: postLink,
+    };
+  }
+
+  // otherwise use link as fallback video
+  if (postLink && postLink.match(videoRegex)) {
+    return {
+      fallback: postLink,
+    };
+  }
 };
 
 export const getText = (post) => {
   // handle cross-posts
   const actualPost = post.crosspost_parent_list?.[0] ?? post;
   return decode(actualPost.selftext);
+};
+
+export const isImagePost = (post) => {
+  if (post.post_hint === 'image') {
+    return true;
+  }
+  if (post.url_overridden_by_dest?.match(imageRegex)) {
+    return true;
+  }
+  return false;
+};
+
+export const isVideoPost = (post) => {
+  if (
+    post.post_hint?.includes?.('video') ||
+    post.media?.reddit_video !== undefined
+  ) {
+    return true;
+  }
+  // handle links that end with mp4 or gifv as videos
+  if (post.url_overridden_by_dest?.match(videoRegex)) {
+    return true;
+  }
+  // handle links to youtube as video posts
+  if (post.url_overridden_by_dest?.includes('youtube.com')) {
+    return true;
+  }
+  // handle links to gfycat as video posts
+  if (post.url_overridden_by_dest?.includes('gfycat.com')) {
+    return true;
+  }
+  return false;
 };

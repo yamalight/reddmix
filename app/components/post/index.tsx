@@ -3,18 +3,9 @@ import ImageGalleryPost from './gallery.js';
 import ImagePost from './image.js';
 import LinkPost from './link.js';
 import TextPost from './text.js';
+import { isImagePost, isVideoPost } from './utils.js';
 import VideoPost from './video.js';
 import PostWrapper from './wrapper.js';
-
-const isImage = (post) => {
-  if (post.post_hint === 'image') {
-    return true;
-  }
-  if (post.url_overridden_by_dest?.match(/\.(jpg|jpeg|png|gif|bmp|svg)$/)) {
-    return true;
-  }
-  return false;
-};
 
 function Post({ post, expanded }) {
   const type = useMemo(() => {
@@ -25,13 +16,10 @@ function Post({ post, expanded }) {
     if (actualPost.post_hint === 'self' || actualPost.is_self) {
       return 'text';
     }
-    if (isImage(actualPost)) {
+    if (isImagePost(actualPost)) {
       return 'image';
     }
-    if (
-      actualPost.post_hint?.includes?.('video') ||
-      actualPost.media?.reddit_video !== undefined
-    ) {
+    if (isVideoPost(actualPost)) {
       return 'video';
     }
     if (actualPost.gallery_data?.items?.length > 0) {
@@ -41,18 +29,6 @@ function Post({ post, expanded }) {
       actualPost.post_hint === 'link' ||
       actualPost?.url_overridden_by_dest !== undefined
     ) {
-      // handle links to youtube as video posts
-      if (actualPost?.url_overridden_by_dest.includes('youtube.com')) {
-        return 'video';
-      }
-      // handle links to gfycat as video posts
-      if (actualPost?.url_overridden_by_dest.includes('gfycat.com')) {
-        return 'video';
-      }
-      // handle URLs that end with .mp4 as video posts
-      if (actualPost?.url_overridden_by_dest.endsWith('.mp4')) {
-        return 'video';
-      }
       // otherwise - treat as link
       return 'link';
     }

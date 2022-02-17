@@ -1,8 +1,9 @@
 import { decode } from 'html-entities';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getImage } from './utils.js';
 
 export default function LinkPost({ post }) {
+  const [imageHidden, setImageHidden] = useState(false);
   const { image } = useMemo(() => getImage(post), [post]);
   const link = useMemo(
     () =>
@@ -11,6 +12,12 @@ export default function LinkPost({ post }) {
         : undefined,
     [post]
   );
+
+  useEffect(() => {
+    setImageHidden(false);
+  }, [post]);
+
+  const hideImage = () => setImageHidden(true);
 
   if (!link) {
     return null;
@@ -21,9 +28,14 @@ export default function LinkPost({ post }) {
       <div className="flex text-base underline text-gray-500 decoration-slate-500 dark:text-gray-300 dark:decoration-slate-200 px-4 mt-2">
         <a href={link}>{link}</a>
       </div>
-      {image && (
+      {image && !imageHidden && (
         <div className="hidden sm:flex flex-shrink-0 w-28 h-28 items-center justify-center">
-          <img className="object-contain" src={image} alt={post.title} />
+          <img
+            className="object-contain"
+            src={image}
+            alt={post.title}
+            onError={hideImage}
+          />
         </div>
       )}
     </div>

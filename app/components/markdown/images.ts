@@ -1,3 +1,5 @@
+const imageRegex = /\.(jpg|jpeg|png|gif|bmp|svg)$/;
+
 export async function retextRedditPreviewToImages() {
   const { visit } = await import('unist-util-visit');
 
@@ -5,11 +7,9 @@ export async function retextRedditPreviewToImages() {
     function transformer(tree) {
       // go through all links
       visit(tree, 'link', function (node) {
-        // if url includes any of frequently used image domains
-        if (
-          node.url.includes('preview.redd.it') ||
-          node.url.includes('i.imgur.com')
-        ) {
+        const url = new URL(node.url);
+        // if url ends with image extension
+        if (url.pathname.match(imageRegex)) {
           // convert to image
           node.type = 'image';
         }

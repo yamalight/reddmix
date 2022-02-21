@@ -7,11 +7,15 @@ export async function retextRedditPreviewToImages() {
     function transformer(tree) {
       // go through all links
       visit(tree, 'link', function (node) {
-        const url = new URL(node.url);
-        // if url ends with image extension
-        if (url.pathname.match(imageRegex)) {
-          // convert to image
-          node.type = 'image';
+        try {
+          const url = new URL(node.url);
+          // if url ends with image extension
+          if (url.pathname.match(imageRegex)) {
+            // convert to image
+            node.type = 'image';
+          }
+        } catch (err) {
+          console.error('Error parsing URL:', err, node.url);
         }
       });
     }

@@ -23,8 +23,8 @@
     "react-icons": "^4.3.1",
     "react-markdown": "^8.0.1",
     "react-virtuoso": "^2.8.1",
-    "remark-gfm": "^3.0.1",
-    "remix": "^1.2.3"
+    "remix": "^1.2.3",
+    "snudown-js": "^3.2.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.2.3",

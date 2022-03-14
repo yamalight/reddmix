@@ -6,5 +6,5 @@ module.exports = {
   browserBuildDirectory: 'public/build',
   publicPath: '/build/',
   serverBuildDirectory: 'api/build',
-  serverDependenciesToBundle: [],
+  serverDependenciesToBundle: ['snudown-js'],
 };

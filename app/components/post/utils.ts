@@ -88,7 +88,10 @@ export const getVideo = (post) => {
   // try to get gfycat embed
   if (postLink && postLink.includes('gfycat.com')) {
     const gfycatId = postLink.match(/gfycat.com\/([^&]*)/);
-    const gfycatIdString = gfycatId?.[1];
+    let gfycatIdString = gfycatId?.[1];
+    if (gfycatIdString.includes('-')) {
+      gfycatIdString = gfycatIdString.split('-')[0];
+    }
     const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://gfycat.com/ifr/${gfycatIdString}" frameborder="0" allowfullscreen></iframe>`;
     return { embed };
   }

@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { markdown } from 'snudown-js';
-import { replaceRedditImages } from './images.js';
+import { replaceRedditGifs, replaceRedditImages } from './utils.js';
 
 export const useMarkdown = (text: string) => {
   const md = useMemo(() => {
     const html = markdown(text);
-    const res = replaceRedditImages(html);
+    const htmlWithImages = replaceRedditImages(html);
+    const res = replaceRedditGifs(htmlWithImages);
     return res;
   }, [text]);
 

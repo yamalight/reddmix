@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { markdown } from 'snudown-js';
+import { markdown } from 'snudown-js/dist/snudown_es.js';
 import { replaceRedditGifs, replaceRedditImages } from './utils.js';
 
 export const useMarkdown = (text: string) => {

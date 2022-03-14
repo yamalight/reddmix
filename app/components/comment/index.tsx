@@ -60,9 +60,11 @@ export default function Comment({ comment, opName, level = 0 }) {
 
   const toggleCollapsed = () => {
     setExpanded(!expanded);
-    // if top-level comment - scroll to it
-    if (expanded && commentRef.current && level === 0) {
-      commentRef.current.scrollIntoView({ behavior: 'smooth' });
+    // scroll to comment after collapse
+    if (expanded && commentRef.current) {
+      setTimeout(() => {
+        commentRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     }
   };
 

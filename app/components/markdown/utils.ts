@@ -3,10 +3,16 @@ const gifRegex = /^\!\[gif\]\(giphy.+?\)/;
 
 export function replaceRedditImages(html: string) {
   return html.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, p1, p2) => {
-    if (imageRegex.test(p1)) {
-      return `<img src="${p1}" alt="${p2}" />`;
+    try {
+      const url = new URL(p1);
+      if (imageRegex.test(url.pathname)) {
+        return `<img src="${p1}" alt="${p2}" />`;
+      }
+      return match;
+    } catch (e) {
+      // return match if error out
+      return match;
     }
-    return match;
   });
 }
 

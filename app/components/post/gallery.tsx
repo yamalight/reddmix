@@ -54,7 +54,10 @@ export default function ImageGalleryPost({ post, expanded }) {
       {expanded && (
         <div className="flex flex-col gap-8">
           {images.map((image) => (
-            <div className="flex flex-1 items-center justify-center">
+            <div
+              className="flex flex-1 items-center justify-center"
+              key={image.id}
+            >
               <div className="relative">
                 <img
                   className="object-contain max-h-[90vh]"

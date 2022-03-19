@@ -36,7 +36,7 @@ export const getGallery = (post) => {
 
   return items.map(({ media_id, id }) => {
     const metadata = actualPost.media_metadata[media_id];
-    const sourceImage = metadata?.s?.u;
+    const sourceImage = metadata?.s?.u ?? metadata?.s?.gif;
     return {
       id,
       url: decode(sourceImage),

@@ -3,6 +3,8 @@ import { decode } from 'html-entities';
 const imageRegex = /\.(jpg|jpeg|png|gif|bmp|svg)$/;
 const videoRegex = /\.(gifv|mp4|webm)$/;
 
+const embedClasses = 'w-full h-full min-h-[70vh] aspect-video !relative';
+
 export const getImage = (post) => {
   // handle cross-posts
   const actualPost = post.crosspost_parent_list?.[0] ?? post;
@@ -66,11 +68,8 @@ export const getVideo = (post) => {
   if (embed) {
     const cleanEmbed = decode(embed);
     const styledEmbed = cleanEmbed.includes('class=')
-      ? cleanEmbed.replace('class="', 'class="w-full h-full min-h-[70vh] ')
-      : cleanEmbed.replace(
-          '<iframe',
-          '<iframe class="w-full h-full min-h-[70vh] aspect-video" '
-        );
+      ? cleanEmbed.replace('class="', `class="${embedClasses} `)
+      : cleanEmbed.replace('<iframe', `<iframe class="${embedClasses}" `);
     return { embed: styledEmbed };
   }
 
@@ -81,7 +80,7 @@ export const getVideo = (post) => {
   if (postLink && postLink.includes('youtube.com')) {
     const youtubeId = postLink.match(/v=([^&]*)/);
     const youtubeIdString = youtubeId?.[1];
-    const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://www.youtube.com/embed/${youtubeIdString}?feature=oembed&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    const embed = `<iframe class="${embedClasses}" src="https://www.youtube.com/embed/${youtubeIdString}?feature=oembed&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     return { embed };
   }
 
@@ -92,7 +91,7 @@ export const getVideo = (post) => {
     if (gfycatIdString.includes('-')) {
       gfycatIdString = gfycatIdString.split('-')[0];
     }
-    const embed = `<iframe class="w-full h-full min-h-[70vh] aspect-video" src="https://gfycat.com/ifr/${gfycatIdString}" frameborder="0" allowfullscreen></iframe>`;
+    const embed = `<iframe class="${embedClasses}" src="https://gfycat.com/ifr/${gfycatIdString}" frameborder="0" allowfullscreen></iframe>`;
     return { embed };
   }
 

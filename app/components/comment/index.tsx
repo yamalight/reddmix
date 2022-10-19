@@ -127,7 +127,7 @@ export default function Comment({ comment, opName, level = 0 }) {
           className={`w-1 h-full border-l-2 border-opacity-25 dark:border-opacity-40 ${colors[level]} dark:${colorsDark[level]}`}
         />
       </button>
-      <div className="flex flex-shrink flex-col">
+      <div className="flex flex-1 flex-col">
         <div className="flex flex-wrap p-1 sm:p-2 items-center">
           <span
             className={`text-sm font-bold mr-1 sm:mr-2 ${
